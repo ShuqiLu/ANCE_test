@@ -1,5 +1,5 @@
 import torch
-
+import numpy as np
 
 def pad_ids(input_ids, attention_mask, token_type_ids, max_length, pad_token, mask_padding_with_zero, pad_token_segment_id, pad_on_left=False):
     padding_length = max_length - len(input_ids)
@@ -38,7 +38,7 @@ def dual_process_fn(line, i, tokenizer, args):
             pad_token_id=1
         else:
             text=text.lower()
-            input_id_a=tokenizer.encode(text)
+            input_id_a=list(np.array(tokenizer.encode(text)[:args.max_seq_length]))
             pad_token_id=1
         token_type_ids_a = [0] * len(input_id_a)
         attention_mask_a = [
@@ -76,7 +76,7 @@ def triple_process_fn(line, i, tokenizer, args):
                 pad_token_id=1
             else:
                 text=text.lower()
-                input_id_a=tokenizer.encode(text.strip())
+                input_id_a=list(np.array( tokenizer.encode(text.strip())[:args.max_seq_length]))
                 pad_token_id=1
             token_type_ids_a = [0] * len(input_id_a)
             attention_mask_a = [

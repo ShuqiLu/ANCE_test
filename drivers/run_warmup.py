@@ -327,7 +327,10 @@ def load_stuff(model_type, args):
         )
         #print('???',args.model_name_or_path)
         model=configObj.model_class(config)
+        #print('???',model.state_dict()['encoder.layers.1.fc2.weight'])
+        #print('???',model.state_dict().keys())
         model.from_pretrained(args.model_name_or_path)
+        #print('???',model.state_dict()['encoder.layers.1.fc2.weight'])
         tokenizer=BertWordPieceTokenizer(args.bpe_vocab_file, clean_text=False, strip_accents=False, lowercase=False)
     else:
         config = configObj.config_class.from_pretrained(
@@ -336,7 +339,8 @@ def load_stuff(model_type, args):
             finetuning_task=args.task_name,
             cache_dir=args.cache_dir if args.cache_dir else None,
         )
-        model=configObj.model_class.from_pretrained(args.model_name_or_path)
+        model=configObj.model_class(config)
+        model.from_pretrained(args.model_name_or_path)
         tokenizer=torch.hub.load('pytorch/fairseq', 'roberta.base')
 
     if args.local_rank == 0:

@@ -218,6 +218,21 @@ class RobertaDot_NLL_LN_fairseq(NLL,nn.Module):
     def body_emb(self, input_ids, attention_mask):
         return self.query_emb(input_ids, attention_mask)
 
+    def from_pretrained(self, model_path):
+        model_dict = self.state_dict()
+        save_model=torch.load(model_path, map_location=lambda storage, loc: storage)
+        #print(save_model['model'].keys())
+        pretrained_dict= {}  #save_model['model']
+        for name in save_model['model']:
+            if  'lm_head' not in name and 'decode' not in name:
+                pretrained_dict['encoder'+name[24:]]=save_model['model'][name]
+        #print(model_dict.keys())
+        print('load model.... ',len(model_dict),len(pretrained_dict))
+        print(pretrained_dict.keys())
+        assert len(model_dict)-4==len(pretrained_dict)
+        model_dict.update(pretrained_dict)
+        self.load_state_dict(model_dict)
+
 class RobertaDot_NLL_LN_fairseq_fast(NLL,nn.Module):
     """None
     Compress embedding to 200d, then computes NLL loss.
