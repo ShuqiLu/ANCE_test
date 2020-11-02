@@ -222,14 +222,22 @@ class RobertaDot_NLL_LN_fairseq(NLL,nn.Module):
         model_dict = self.state_dict()
         save_model=torch.load(model_path, map_location=lambda storage, loc: storage)
         #print(save_model['model'].keys())
-        pretrained_dict= {}  #save_model['model']
-        for name in save_model['model']:
-            if  'lm_head' not in name and 'decode' not in name:
-                pretrained_dict['encoder'+name[24:]]=save_model['model'][name]
+        pretrained_dict= {}
+        if 'model' in save_model.keys():
+            #save_model['model']
+            for name in save_model['model']:
+                if  'lm_head' not in name and 'decode' not in name:
+                    pretrained_dict['encoder'+name[24:]]=save_model['model'][name]
+            assert len(model_dict)-4==len(pretrained_dict)
+        else:
+            for name in save_model:
+                pretrained_dict[name[7:]]=save_model[name]
+            assert len(model_dict)==len(pretrained_dict)
+
         #print(model_dict.keys())
         print('load model.... ',len(model_dict),len(pretrained_dict))
         print(pretrained_dict.keys())
-        assert len(model_dict)-4==len(pretrained_dict)
+        
         model_dict.update(pretrained_dict)
         self.load_state_dict(model_dict)
 
@@ -281,14 +289,22 @@ class RobertaDot_NLL_LN_fairseq_fast(NLL,nn.Module):
         model_dict = self.state_dict()
         save_model=torch.load(model_path, map_location=lambda storage, loc: storage)
         #print(save_model['model'].keys())
-        pretrained_dict= {}  #save_model['model']
-        for name in save_model['model']:
-            if  'lm_head' not in name and 'decode' not in name:
-                pretrained_dict['encoder'+name[24:]]=save_model['model'][name]
+        pretrained_dict= {}
+        if 'model' in save_model.keys():
+            #save_model['model']
+            for name in save_model['model']:
+                if  'lm_head' not in name and 'decode' not in name:
+                    pretrained_dict['encoder'+name[24:]]=save_model['model'][name]
+            assert len(model_dict)-4==len(pretrained_dict)
+        else:
+            for name in save_model:
+                pretrained_dict[name[7:]]=save_model[name]
+            assert len(model_dict)==len(pretrained_dict)
+
         #print(model_dict.keys())
         print('load model.... ',len(model_dict),len(pretrained_dict))
         print(pretrained_dict.keys())
-        assert len(model_dict)-4==len(pretrained_dict)
+        
         model_dict.update(pretrained_dict)
         self.load_state_dict(model_dict)
         #pass

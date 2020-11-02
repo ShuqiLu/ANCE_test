@@ -1,7 +1,8 @@
 import sys
 sys.path += ["../"]
 import pandas as pd
-from transformers import glue_compute_metrics as compute_metrics, glue_output_modes as output_modes, glue_processors as processors
+#from transformers import glue_compute_metrics as compute_metrics, glue_output_modes as output_modes, glue_processors as processors
+from transformers import glue_output_modes as output_modes, glue_processors as processors
 from transformers import (
     AdamW,
     RobertaConfig,
@@ -70,6 +71,12 @@ def train(args, model, tokenizer, f, train_fn):
             optimizer_grouped_parameters.append({"params": layer.parameters()})
             for p in layer.parameters():
                 layer_optim_params.add(p)
+    # if getattr_recursive(model, "roberta.encoder.layer") is not None:
+    #     for layer in model.roberta.encoder.layer:
+    #         optimizer_grouped_parameters.append({"params": layer.parameters()})
+    #         for p in layer.parameters():
+    #             layer_optim_params.add(p)
+
     optimizer_grouped_parameters.append(
         {"params": [p for p in model.parameters() if p not in layer_optim_params]})
 
@@ -226,11 +233,14 @@ def train(args, model, tokenizer, f, train_fn):
                         args.output_dir, "checkpoint-{}".format(global_step))
                     if not os.path.exists(output_dir):
                         os.makedirs(output_dir)
-                    model_to_save = (
-                        model.module if hasattr(model, "module") else model
-                    )  # Take care of distributed/parallel training
-                    model_to_save.save_pretrained(output_dir)
-                    tokenizer.save_pretrained(output_dir)
+                    if 'fairseq' not in args.train_model_type:
+                        model_to_save = (
+                            model.module if hasattr(model, "module") else model
+                        )  # Take care of distributed/parallel training
+                        model_to_save.save_pretrained(output_dir)
+                        tokenizer.save_pretrained(output_dir)
+                    else:
+                        torch.save(model.state_dict(), os.path.join(output_dir,'model.pt'))
 
                     torch.save(args, os.path.join(
                         output_dir, "training_args.bin"))
@@ -329,7 +339,7 @@ def load_stuff(model_type, args):
         model=configObj.model_class(config)
         #print('???',model.state_dict()['encoder.layers.1.fc2.weight'])
         #print('???',model.state_dict().keys())
-        model.from_pretrained(args.model_name_or_path)
+        model.from_pretrained(os.path.join(args.model_name_or_path,args.model_file))
         #print('???',model.state_dict()['encoder.layers.1.fc2.weight'])
         tokenizer=BertWordPieceTokenizer(args.bpe_vocab_file, clean_text=False, strip_accents=False, lowercase=False)
     else:
@@ -340,7 +350,7 @@ def load_stuff(model_type, args):
             cache_dir=args.cache_dir if args.cache_dir else None,
         )
         model=configObj.model_class(config)
-        model.from_pretrained(args.model_name_or_path)
+        model.from_pretrained(os.path.join(args.model_name_or_path,args.model_file))
         tokenizer=torch.hub.load('pytorch/fairseq', 'roberta.base')
 
     if args.local_rank == 0:
@@ -373,6 +383,12 @@ def get_arguments():
 
     parser.add_argument(
         "--model_name_or_path",
+        default=None,
+        type=str,
+        required=True,
+    )
+    parser.add_argument(
+        "--model_file",
         default=None,
         type=str,
         required=True,
