@@ -393,7 +393,7 @@ def get_arguments():
         "--model_file",
         default=None,
         type=str,
-        required=True,
+        #required=True,
     )
 
     parser.add_argument(
