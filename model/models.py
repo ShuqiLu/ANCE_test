@@ -96,7 +96,7 @@ class NLL(EmbeddingMixin):
         #print('???',logit_matrix.shape,logit_matrix)
         lsm = F.log_softmax(logit_matrix, dim=1)
         #print('???',lsm)
-        assert 1==0
+        #assert 1==0
         loss = -1.0 * lsm[:, 0]
         return (loss.mean(),)
 
