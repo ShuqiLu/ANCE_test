@@ -93,7 +93,10 @@ class NLL(EmbeddingMixin):
 
         logit_matrix = torch.cat([(q_embs * a_embs).sum(-1).unsqueeze(1),
                                   (q_embs * b_embs).sum(-1).unsqueeze(1)], dim=1)  # [B, 2]
+        #print('???',logit_matrix.shape,logit_matrix)
         lsm = F.log_softmax(logit_matrix, dim=1)
+        #print('???',lsm)
+        assert 1==0
         loss = -1.0 * lsm[:, 0]
         return (loss.mean(),)
 

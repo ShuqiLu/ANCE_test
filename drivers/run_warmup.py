@@ -194,6 +194,8 @@ def train(args, model, tokenizer, f, train_fn):
                 outputs = model(*batch)
             else:
                 with model.no_sync():
+                    # print('???',*batch)
+                    # assert 1==0
                     outputs = model(*batch)
             # model outputs are always tuple in transformers (see doc)
             loss = outputs[0]
