@@ -293,12 +293,21 @@ class RobertaDot_NLL_LN_fairseq_fast(NLL,nn.Module):
         save_model=torch.load(model_path, map_location=lambda storage, loc: storage)
         #print(save_model['model'].keys())
         pretrained_dict= {}
+        # print('???model_dict',model_dict.keys(),len(model_dict.keys()))
+        # print('???save_model',save_model['model'].keys(),len(save_model['model'].keys()))
         if 'model' in save_model.keys():
             #save_model['model']
             for name in save_model['model']:
                 if  'lm_head' not in name and 'decode' not in name:
-                    pretrained_dict['encoder'+name[24:]]=save_model['model'][name]
-            assert len(model_dict)-4==len(pretrained_dict)
+                    if 'encoder' not in name:
+                        pretrained_dict[name]=save_model['model'][name]
+                    else:
+                        pretrained_dict['encoder'+name[24:]]=save_model['model'][name]
+            # assert len(model_dict)-4==len(pretrained_dict)
+            # for item in pretrained_dict.keys():
+            #     if item not in model_dict:
+            #         print('???',item)
+            assert len(model_dict)==len(pretrained_dict), (len(model_dict),len(pretrained_dict))
         else:
             for name in save_model:
                 pretrained_dict[name[7:]]=save_model[name]
