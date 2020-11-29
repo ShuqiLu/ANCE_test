@@ -37,7 +37,7 @@ import logging
 import random
 import time
 import pytrec_eval
-
+from tokenizers import BertWordPieceTokenizer, normalizers, pre_tokenizers
 torch.multiprocessing.set_sharing_strategy('file_system')
 
 
@@ -103,26 +103,55 @@ def load_positive_ids(args):
 def load_model(args, checkpoint_path):
     label_list = ["0", "1"]
     num_labels = len(label_list)
-    args.model_type = args.model_type.lower()
-    configObj = MSMarcoConfigDict[args.model_type]
+    args.num_labels = num_labels
+    args.train_model_type = args.train_model_type.lower()
+    configObj = MSMarcoConfigDict[args.train_model_type]
     args.model_name_or_path = checkpoint_path
-    config = configObj.config_class.from_pretrained(
-        args.model_name_or_path,
-        num_labels=num_labels,
-        finetuning_task="MSMarco",
-        cache_dir=args.cache_dir if args.cache_dir else None,
-    )
-    tokenizer = configObj.tokenizer_class.from_pretrained(
-        args.model_name_or_path,
-        do_lower_case=True,
-        cache_dir=args.cache_dir if args.cache_dir else None,
-    )
-    model = configObj.model_class.from_pretrained(
-        args.model_name_or_path,
-        from_tf=bool(".ckpt" in args.model_name_or_path),
-        config=config,
-        cache_dir=args.cache_dir if args.cache_dir else None,
-    )
+    if 'fairseq' not in args.train_model_type:
+        config = configObj.config_class.from_pretrained(
+            args.model_name_or_path,
+            num_labels=num_labels,
+            finetuning_task="MSMarco",
+            cache_dir=args.cache_dir if args.cache_dir else None,
+        )
+        tokenizer = configObj.tokenizer_class.from_pretrained(
+            args.model_name_or_path,
+            do_lower_case=True,
+            cache_dir=args.cache_dir if args.cache_dir else None,
+        )
+        model = configObj.model_class.from_pretrained(
+            args.model_name_or_path,
+            from_tf=bool(".ckpt" in args.model_name_or_path),
+            config=config,
+            cache_dir=args.cache_dir if args.cache_dir else None,
+        )
+    elif 'fast' in args.train_model_type:
+        config = configObj.config_class.from_pretrained(
+            'roberta-base',
+            num_labels=args.num_labels,
+            finetuning_task="MSMarco",
+            cache_dir=args.cache_dir if args.cache_dir else None,
+        )
+        #print('???',args.model_name_or_path)
+        model=configObj.model_class(config)
+        #print('???',model.state_dict()['encoder.layers.1.fc2.weight'])
+        #print('???',model.state_dict().keys())
+        if os.path.isdir(args.model_name_or_path):
+            model.from_pretrained(os.path.join(args.model_name_or_path,args.model_file))
+        else:
+            model.from_pretrained(os.path.join(args.model_name_or_path))
+        #print('???',model.state_dict()['encoder.layers.1.fc2.weight'])
+        tokenizer=BertWordPieceTokenizer(args.bpe_vocab_file, clean_text=False, strip_accents=False, lowercase=False)
+    else:
+        config = configObj.config_class.from_pretrained(
+            'roberta-base',
+            num_labels=args.num_labels,
+            finetuning_task="MSMarco",
+            cache_dir=args.cache_dir if args.cache_dir else None,
+        )
+        model=configObj.model_class(config)
+        model.from_pretrained(os.path.join(args.model_name_or_path,args.model_file))
+        tokenizer=torch.hub.load('pytorch/fairseq', 'roberta.base')
     model.to(args.device)
     logger.info("Inference parameters %s", args)
     if args.local_rank != -1:
@@ -476,7 +505,7 @@ def get_arguments():
     )
 
     parser.add_argument(
-        "--model_type",
+        "--train_model_type",
         default=None,
         type=str,
         required=True,
@@ -607,7 +636,18 @@ def get_arguments():
         action="store_true",
         help="only do inference if specify",
     )
-
+    parser.add_argument(
+        "--bpe_vocab_file", 
+        type=str,
+        default="", 
+        help="For distant debugging.",
+    )
+    parser.add_argument(
+        "--model_file",
+        default=None,
+        type=str,
+        #required=True,
+    )
     args = parser.parse_args()
 
     return args

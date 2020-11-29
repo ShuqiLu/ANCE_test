@@ -353,9 +353,10 @@ class RobertaDot_CLF_ANN_NLL_MultiChunk(NLL_MultiChunk, RobertaDot_NLL_LN):
             full_length //
             chunk_factor)
 
+        #print('???',input_seq)
         outputs_k = self.roberta(input_ids=input_seq,
                                  attention_mask=attention_mask_seq)
-
+        #print('???',outputs_k)
         compressed_output_k = self.embeddingHead(
             outputs_k[0])  # [batch, len, dim]
         compressed_output_k = self.norm(compressed_output_k[:, 0, :])
@@ -365,6 +366,85 @@ class RobertaDot_CLF_ANN_NLL_MultiChunk(NLL_MultiChunk, RobertaDot_NLL_LN):
             batchS, chunk_factor, embeddingS)
 
         return complex_emb_k  # size [batchS, chunk_factor, embeddingS]
+
+class RobertaDot_CLF_ANN_NLL_MultiChunk_fairseq_fast(NLL_MultiChunk, RobertaDot_NLL_LN_fairseq_fast):
+    def __init__(self, config):
+        RobertaDot_NLL_LN_fairseq_fast.__init__(self, config)
+        self.base_len = 512
+
+    def body_emb(self, input_ids, attention_mask):
+        [batchS, full_length] = input_ids.size()
+        chunk_factor = full_length // self.base_len
+
+        input_seq = input_ids.reshape(
+            batchS,
+            chunk_factor,
+            full_length //
+            chunk_factor).reshape(
+            batchS *
+            chunk_factor,
+            full_length //
+            chunk_factor)
+        # attention_mask_seq = attention_mask.reshape(
+        #     batchS,
+        #     chunk_factor,
+        #     full_length //
+        #     chunk_factor).reshape(
+        #     batchS *
+        #     chunk_factor,
+        #     full_length //
+        #     chunk_factor)
+
+        # outputs_k = self.roberta(input_ids=input_seq,
+        #                          attention_mask=attention_mask_seq)
+        #print('???',input_seq)
+        outputs_k, _= self.encoder(input_seq)
+        outputs_k=outputs_k[-1].transpose(0,1)       
+        #print('???',outputs_k)#这里要想一想怎么调，要不把enoder里面的*0去掉
+        compressed_output_k = self.embeddingHead(
+            outputs_k)  # [batch, len, dim]
+        compressed_output_k = self.norm(compressed_output_k[:, 0, :])
+
+        [batch_expand, embeddingS] = compressed_output_k.size()
+        complex_emb_k = compressed_output_k.reshape(
+            batchS, chunk_factor, embeddingS)
+
+        return complex_emb_k  # size [batchS, chunk_factor, embeddingS]
+
+    # def from_pretrained(self, model_path):
+    #     model_dict = self.state_dict()
+    #     save_model=torch.load(model_path, map_location=lambda storage, loc: storage)
+    #     #print(save_model['model'].keys())
+    #     pretrained_dict= {}
+    #     # print('???model_dict',model_dict.keys(),len(model_dict.keys()))
+    #     # print('???save_model',save_model['model'].keys(),len(save_model['model'].keys()))
+    #     if 'model' in save_model.keys():
+    #         #save_model['model']
+    #         for name in save_model['model']:
+    #             if 'lm_head' not in name and 'encoder' in name:
+    #                 pretrained_dict['encoder'+name[24:]]=save_model['model'][name]
+    #             # if  'lm_head' not in name and 'decode' not in name:
+    #             #     if 'encoder' not in name:
+    #             #         pretrained_dict[name]=save_model['model'][name]
+    #             #     else:
+    #             #         pretrained_dict['encoder'+name[24:]]=save_model['model'][name]
+            
+    #         # assert len(model_dict)-4==len(pretrained_dict)
+    #         # for item in pretrained_dict.keys():
+    #         #     if item not in model_dict:
+    #         #         print('???',item)
+    #         assert len(model_dict)-4==len(pretrained_dict), (len(model_dict),len(pretrained_dict))
+    #     else:
+    #         for name in save_model:
+    #             pretrained_dict[name[7:]]=save_model[name]
+    #         assert len(model_dict)==len(pretrained_dict)
+
+    #     #print(model_dict.keys())
+    #     print('load model.... ',len(model_dict),len(pretrained_dict))
+    #     print(pretrained_dict.keys())
+        
+    #     model_dict.update(pretrained_dict)
+    #     self.load_state_dict(model_dict)
 
 
 class HFBertEncoder(BertModel):
@@ -467,6 +547,10 @@ configs = [
                 model=RobertaDot_NLL_LN_fairseq_fast,
                 use_mean=False,
                 #config_class=,
+                ),
+    MSMarcoConfig(name="rdot_nll_multi_chunk_fairseq_fast",
+                model=RobertaDot_CLF_ANN_NLL_MultiChunk_fairseq_fast,
+                use_mean=False,
                 ),
 ]
 

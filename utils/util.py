@@ -330,10 +330,10 @@ class StreamingDataset(IterableDataset):
 
 def tokenize_to_file(args, i, num_process, in_path, out_path, line_fn):
 
-    configObj = MSMarcoConfigDict[args.model_type]
-    if 'fast' in args.model_type:
+    configObj = MSMarcoConfigDict[args.train_model_type]
+    if 'fast' in args.train_model_type:
         tokenizer = BertWordPieceTokenizer(args.bpe_vocab_file, clean_text=False, strip_accents=False, lowercase=False)
-    elif 'fairseq' in args.model_type:
+    elif 'fairseq' in args.train_model_type:
         #tokenizer=configObj.tokenizer_class.from_pretrained(args.model_name_or_path,checkpoint_file='model.pt')
         tokenizer=torch.hub.load('pytorch/fairseq', 'roberta.base')
     else:

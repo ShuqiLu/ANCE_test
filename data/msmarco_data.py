@@ -228,9 +228,9 @@ def PassagePreprocessingFn(args, line, tokenizer):
         title = line_arr[2].rstrip()
         p_text = line_arr[3].rstrip()
 
-        if 'fairseq' in args.model_type:
+        if 'fairseq' in args.train_model_type:
             full_text = url + "</s>" + title + "</s>" + p_text
-        elif 'fast' in args.model_type:
+        elif 'fast' in args.train_model_type:
             full_text = url + "[SEP]" + title + "[SEP]" + p_text
         else:
             full_text = url + "<sep>" + title + "<sep>" + p_text
@@ -248,16 +248,28 @@ def PassagePreprocessingFn(args, line, tokenizer):
         # experiment that uses less than 500 - 1k tokens
         full_text = p_text[:args.max_doc_character]
 
-    if 'fairseq' in args.model_type:
-        passage=tokenizer.encode(full_text)
+    # if 'fairseq' in args.model_type:
+    #     passage=tokenizer.encode(full_text)
+    # else:
+    #     passage = tokenizer.encode(
+    #         full_text,
+    #         add_special_tokens=True,
+    #         max_length=args.max_seq_length,
+    #     )
+    if 'fairseq' not in args.train_model_type:
+        passage  = tokenizer.encode(
+            full_text, add_special_tokens=True, max_length=args.max_seq_length,)
+        pad_token_id=tokenizer.pad_token_id
+    elif 'fast' in args.train_model_type:
+        full_text=full_text.lower()
+        passage =tokenizer.encode(full_text, add_special_tokens=True).ids[:args.max_seq_length]
+        pad_token_id=1
     else:
-        passage = tokenizer.encode(
-            full_text,
-            add_special_tokens=True,
-            max_length=args.max_seq_length,
-        )
+        full_text=full_text.lower()
+        passage =list(np.array( tokenizer.encode(full_text)[:args.max_seq_length]))
+        pad_token_id=1
     passage_len = min(len(passage), args.max_seq_length)
-    input_id_b = pad_input_ids(passage, args.max_seq_length)
+    input_id_b = pad_input_ids(passage, args.max_seq_length,pad_token=pad_token_id)
 
     return p_id.to_bytes(8,'big') + passage_len.to_bytes(4,'big') + np.array(input_id_b,np.int32).tobytes()
 
@@ -265,15 +277,28 @@ def PassagePreprocessingFn(args, line, tokenizer):
 def QueryPreprocessingFn(args, line, tokenizer):
     line_arr = line.split('\t')
     q_id = int(line_arr[0])
-    if 'fairseq' in args.model_type:
-        passage=tokenizer.encode(full_text)
+    # if 'fairseq' in args.model_type:
+    #     passage=tokenizer.encode(full_text)
+    # else:
+    #     passage = tokenizer.encode(
+    #         line_arr[1].rstrip(),
+    #         add_special_tokens=True,
+    #         max_length=args.max_query_length)
+    if 'fairseq' not in args.train_model_type:
+        passage  = tokenizer.encode(
+            line_arr[1].rstrip(), add_special_tokens=True, max_length=args.max_seq_length,)
+        pad_token_id=tokenizer.pad_token_id
+    elif 'fast' in args.train_model_type:
+        full_text=line_arr[1].rstrip().lower()
+        passage =tokenizer.encode(full_text, add_special_tokens=True).ids[:args.max_seq_length]
+        pad_token_id=1
     else:
-        passage = tokenizer.encode(
-            line_arr[1].rstrip(),
-            add_special_tokens=True,
-            max_length=args.max_query_length)
+        full_text=line_arr[1].rstrip().lower()
+        passage =list(np.array( tokenizer.encode(full_text)[:args.max_seq_length]))
+        pad_token_id=1
+
     passage_len = min(len(passage), args.max_query_length)
-    input_id_b = pad_input_ids(passage, args.max_query_length)
+    input_id_b = pad_input_ids(passage, args.max_query_length,pad_token=pad_token_id)
 
     return q_id.to_bytes(8,'big') + passage_len.to_bytes(4,'big') + np.array(input_id_b,np.int32).tobytes()
 
@@ -386,7 +411,7 @@ def get_arguments():
         help="The output data dir",
     )
     parser.add_argument(
-        "--model_type",
+        "--train_model_type",
         default=None,
         type=str,
         required=True,
@@ -427,6 +452,18 @@ def get_arguments():
         default=0,
         type=int,
         help="0 for doc, 1 for passage",
+    )
+    parser.add_argument(
+        "--bpe_vocab_file", 
+        type=str,
+        default="", 
+        help="For distant debugging.",
+    )
+    parser.add_argument(
+        "--model_file",
+        default=None,
+        type=str,
+        #required=True,
     )
 
     args = parser.parse_args()
