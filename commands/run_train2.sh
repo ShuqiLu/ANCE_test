@@ -59,6 +59,7 @@ base_data_dir="../../data/raw_data/"
 preprocessed_data_dir="${base_data_dir}ann_data_${tokenizer_type}_${seq_length}/"
 job_name="OSDoc2048"
 pretrained_checkpoint_dir=../../data/model_temp/roberta_dr_140.pt
+# pretrained_checkpoint_dir=../../data/model_temp/model.pt
 data_type=0
 warmup_steps=500
 per_gpu_train_batch_size=2
@@ -110,7 +111,7 @@ python -m torch.distributed.launch --nproc_per_node=$gpu_no ../drivers/run_ann.p
 --model_name_or_path $pretrained_checkpoint_dir --task_name MSMarco --triplet --data_dir $preprocessed_data_dir \
 --ann_dir /home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_11_30_01/ann_data --max_seq_length $seq_length --per_gpu_train_batch_size=$per_gpu_train_batch_size \
 --gradient_accumulation_steps $gradient_accumulation_steps --learning_rate $learning_rate --output_dir $model_dir \
---warmup_steps $warmup_steps --logging_steps 100 --save_steps 10000 --optimizer lamb --single_warmup --bpe_vocab_file ../../data/bert-16g-0930/vocab.txt\
+--warmup_steps $warmup_steps --logging_steps 1 --save_steps 10000 --optimizer lamb --single_warmup --bpe_vocab_file ../../data/bert-16g-0930/vocab.txt\
 "
 
 echo $train_cmd

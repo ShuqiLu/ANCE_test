@@ -311,8 +311,16 @@ def train(args, model, tokenizer, query_cache, passage_cache):
                 model_to_save = (
                     model.module if hasattr(model, "module") else model
                 )  # Take care of distributed/parallel training
-                model_to_save.save_pretrained(output_dir)
-                tokenizer.save_pretrained(output_dir)
+                #model_to_save.save_pretrained(output_dir)
+                #tokenizer.save_pretrained(output_dir)
+                if 'fairseq' not in args.train_model_type:
+                    model_to_save = (
+                        model.module if hasattr(model, "module") else model
+                    )  # Take care of distributed/parallel training
+                    model_to_save.save_pretrained(output_dir)
+                    tokenizer.save_pretrained(output_dir)
+                else:
+                    torch.save(model.state_dict(), os.path.join(output_dir,'model.pt'))
 
                 torch.save(args, os.path.join(output_dir, "training_args.bin"))
                 logger.info("Saving model checkpoint to %s", output_dir)
