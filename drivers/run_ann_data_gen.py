@@ -137,8 +137,8 @@ def load_model(args, checkpoint_path):
         #print('???',model.state_dict()['encoder.layers.1.fc2.weight'])
         #print('???',model.state_dict().keys())
         if os.path.isdir(args.model_name_or_path):
-            if args.model_file if None:
-                args.model_file=model.pt
+            if args.model_file is None:
+                args.model_file='model.pt'
             model.from_pretrained(os.path.join(args.model_name_or_path,args.model_file))
         else:
             model.from_pretrained(os.path.join(args.model_name_or_path))

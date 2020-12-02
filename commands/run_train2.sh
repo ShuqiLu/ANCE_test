@@ -20,12 +20,12 @@
 # Note if preprocess directory or ann data directory already exist, those steps will be skipped
 # and training will start immediately
 
-# # Passage ANCE(FirstP) 
+# Passage ANCE(FirstP) 
 # gpu_no=4
 # seq_length=512
-# model_type=rdot_nll
-# tokenizer_type="roberta-base"
-# base_data_dir="../data/raw_data/"
+# model_type=rdot_nll_fairseq_fast
+# tokenizer_type="roberta-base-fast"
+# base_data_dir="../../data/raw_data/"
 # preprocessed_data_dir="${base_data_dir}ann_data_${tokenizer_type}_${seq_length}/"
 # job_name="OSPass512"
 # pretrained_checkpoint_dir="warmup or trained checkpoint path"
@@ -35,56 +35,56 @@
 # gradient_accumulation_steps=2
 # learning_rate=1e-6
 
-# # Document ANCE(FirstP) 
-# gpu_no=4
-# seq_length=512
-# tokenizer_type="roberta-base"
-# model_type=rdot_nll
-# base_data_dir="../data/raw_data/"
-# preprocessed_data_dir="${base_data_dir}ann_data_${tokenizer_type}_${seq_length}/"
-# job_name="OSDoc512"
-# pretrained_checkpoint_dir="warmup or trained checkpoint path"
-# data_type=0
-# warmup_steps=3000
-# per_gpu_train_batch_size=8
-# gradient_accumulation_steps=2
-# learning_rate=5e-6
-
-# # Document ANCE(MaxP) 
-gpu_no=1
-seq_length=2048
-tokenizer_type="roberta-base-fast"
-model_type=rdot_nll_multi_chunk_fairseq_fast
+# Document ANCE(FirstP) 
+gpu_no=4
+seq_length=512
+tokenizer_type="roberta-base-fast-doc"
+model_type=rdot_nll_fairseq_fast
 base_data_dir="../../data/raw_data/"
 preprocessed_data_dir="${base_data_dir}ann_data_${tokenizer_type}_${seq_length}/"
-job_name="OSDoc2048"
-pretrained_checkpoint_dir=../../data/model_temp/roberta_dr_140.pt
-# pretrained_checkpoint_dir=../../data/model_temp/model.pt
+job_name="OSDoc512"
+pretrained_checkpoint_dir="warmup or trained checkpoint path"
 data_type=0
-warmup_steps=500
-per_gpu_train_batch_size=2
-gradient_accumulation_steps=8
-learning_rate=1e-5
+warmup_steps=3000
+per_gpu_train_batch_size=8
+gradient_accumulation_steps=2
+learning_rate=5e-6
 
-##################################### Data Preprocessing ################################
+# # Document ANCE(MaxP) 
+# gpu_no=1
+# seq_length=2048
+# tokenizer_type="roberta-base-fast"
+# model_type=rdot_nll_multi_chunk_fairseq_fast
+# base_data_dir="../../data/raw_data/"
+# preprocessed_data_dir="${base_data_dir}ann_data_${tokenizer_type}_${seq_length}/"
+# job_name="OSDoc2048"
+# pretrained_checkpoint_dir=../../data/model_temp/roberta_dr_140.pt
+# # pretrained_checkpoint_dir=../../data/model_temp/model.pt
+# data_type=0
+# warmup_steps=500
+# per_gpu_train_batch_size=2
+# gradient_accumulation_steps=8
+# learning_rate=1e-5
+
+# ##################################### Data Preprocessing ################################
 model_dir="${base_data_dir}${job_name}/"
 model_ann_data_dir="${model_dir}ann_data/"
 
-# preprocess_cmd="\
-# python ../data/msmarco_data.py --data_dir $base_data_dir --out_data_dir $preprocessed_data_dir --train_model_type $model_type --model_file checkpoint_best.pt  \
-# --model_name_or_path ../../data/model_temp --max_seq_length $seq_length --data_type $data_type --bpe_vocab_file ../../data/bert-16g-0930/vocab.txt\
-# "
+preprocess_cmd="\
+python ../data/msmarco_data.py --data_dir $base_data_dir --out_data_dir $preprocessed_data_dir --train_model_type $model_type --model_file checkpoint_best.pt  \
+--model_name_or_path ../../data/model_temp --max_seq_length $seq_length --data_type $data_type --bpe_vocab_file ../../data/bert-16g-0930/vocab.txt\
+"
 
-# echo $preprocess_cmd
-# eval $preprocess_cmd
+echo $preprocess_cmd
+eval $preprocess_cmd
 
-# if [[ $? = 0 ]]; then
-#     echo "successfully created preprocessed data"
-# else
-# 	echo "preprocessing failed"
-#     echo "failure: $?"
-#     exit 1
-# fi
+if [[ $? = 0 ]]; then
+    echo "successfully created preprocessed data"
+else
+	echo "preprocessing failed"
+    echo "failure: $?"
+    exit 1
+fi
 
 ##################################### Inital ANN Data generation ################################
 # initial_data_gen_cmd="\
@@ -106,13 +106,13 @@ model_ann_data_dir="${model_dir}ann_data/"
 # fi
 
 # ############################################# Training ########################################
-train_cmd="\
-python -m torch.distributed.launch --nproc_per_node=$gpu_no ../drivers/run_ann.py --train_model_type $model_type \
---model_name_or_path $pretrained_checkpoint_dir --task_name MSMarco --triplet --data_dir $preprocessed_data_dir \
---ann_dir /home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_11_30_01/ann_data --max_seq_length $seq_length --per_gpu_train_batch_size=$per_gpu_train_batch_size \
---gradient_accumulation_steps $gradient_accumulation_steps --learning_rate $learning_rate --output_dir $model_dir \
---warmup_steps $warmup_steps --logging_steps 1 --save_steps 10000 --optimizer lamb --single_warmup --bpe_vocab_file ../../data/bert-16g-0930/vocab.txt\
-"
+# train_cmd="\
+# python -m torch.distributed.launch --nproc_per_node=$gpu_no ../drivers/run_ann.py --train_model_type $model_type \
+# --model_name_or_path $pretrained_checkpoint_dir --task_name MSMarco --triplet --data_dir $preprocessed_data_dir \
+# --ann_dir /home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_11_30_01/ann_data --max_seq_length $seq_length --per_gpu_train_batch_size=$per_gpu_train_batch_size \
+# --gradient_accumulation_steps $gradient_accumulation_steps --learning_rate $learning_rate --output_dir $model_dir \
+# --warmup_steps $warmup_steps --logging_steps 1 --save_steps 10000 --optimizer lamb --single_warmup --bpe_vocab_file ../../data/bert-16g-0930/vocab.txt\
+# "
 
-echo $train_cmd
-eval $train_cmd
+# echo $train_cmd
+# eval $train_cmd

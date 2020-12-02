@@ -228,10 +228,10 @@ def PassagePreprocessingFn(args, line, tokenizer):
         title = line_arr[2].rstrip()
         p_text = line_arr[3].rstrip()
 
-        if 'fairseq' in args.train_model_type:
-            full_text = url + "</s>" + title + "</s>" + p_text
-        elif 'fast' in args.train_model_type:
+        if 'fast' in args.train_model_type:
             full_text = url + "[SEP]" + title + "[SEP]" + p_text
+        elif 'fairseq' in args.train_model_type:
+            full_text = url + "</s>" + title + "</s>" + p_text
         else:
             full_text = url + "<sep>" + title + "<sep>" + p_text
         # keep only first 10000 characters, should be sufficient for any
