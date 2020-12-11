@@ -163,7 +163,7 @@ def train(args, model, tokenizer, query_cache, passage_cache):
     model.train()
     set_seed(args)  # Added here for reproductibility
 
-    last_ann_no = -1
+    last_ann_no = -2
     train_dataloader = None
     train_dataloader_iter = None
     dev_ndcg = 0
@@ -179,7 +179,13 @@ def train(args, model, tokenizer, query_cache, passage_cache):
 
         if step % args.gradient_accumulation_steps == 0 and global_step % args.logging_steps == 0:
             # check if new ann training data is availabe
+            # if not os.path.exists(args.ann_dir):
+            #     print('???',args.blob_ann_dir)
+            # else:
             ann_no, ann_path, ndcg_json = get_latest_ann_data(args.ann_dir)
+            if ann_path is None:
+                ann_no, ann_path, ndcg_json = get_latest_ann_data(args.blob_ann_dir)
+                ann_no=-1
             if ann_path is not None and ann_no != last_ann_no:
                 logger.info("Training on new add data at %s", ann_path)
                 with open(ann_path, 'r') as f:
@@ -308,6 +314,12 @@ def train(args, model, tokenizer, query_cache, passage_cache):
                     args.output_dir, "checkpoint-{}".format(global_step))
                 if not os.path.exists(output_dir):
                     os.makedirs(output_dir)
+
+                blob_output_dir = os.path.join(
+                    args.blob_output_dir, "checkpoint-{}".format(global_step))
+                if not os.path.exists(blob_output_dir):
+                    os.makedirs(blob_output_dir)
+
                 model_to_save = (
                     model.module if hasattr(model, "module") else model
                 )  # Take care of distributed/parallel training
@@ -321,9 +333,11 @@ def train(args, model, tokenizer, query_cache, passage_cache):
                     tokenizer.save_pretrained(output_dir)
                 else:
                     torch.save(model.state_dict(), os.path.join(output_dir,'model.pt'))
+                    torch.save(model.state_dict(), os.path.join(blob_output_dir,'model.pt'))
 
                 torch.save(args, os.path.join(output_dir, "training_args.bin"))
-                logger.info("Saving model checkpoint to %s", output_dir)
+                torch.save(args, os.path.join(blob_output_dir, "training_args.bin"))
+                logger.info("Saving model checkpoint to %s", blob_output_dir)
 
                 torch.save(
                     optimizer.state_dict(),
@@ -335,6 +349,18 @@ def train(args, model, tokenizer, query_cache, passage_cache):
                     os.path.join(
                         output_dir,
                         "scheduler.pt"))
+
+                torch.save(
+                    optimizer.state_dict(),
+                    os.path.join(
+                        blob_output_dir,
+                        "optimizer.pt"))
+                torch.save(
+                    scheduler.state_dict(),
+                    os.path.join(
+                        blob_output_dir,
+                        "scheduler.pt"))
+
                 logger.info(
                     "Saving optimizer and scheduler states to %s",
                     output_dir)
@@ -359,6 +385,14 @@ def get_arguments():
 
     parser.add_argument(
         "--ann_dir",
+        default=None,
+        type=str,
+        required=True,
+        help="The ann training data dir. Should contain the output of ann data generation job",
+    )
+
+    parser.add_argument(
+        "--blob_ann_dir",
         default=None,
         type=str,
         required=True,
@@ -612,6 +646,13 @@ def get_arguments():
         type=str,
         #required=True,
     )
+    parser.add_argument(
+        "--blob_output_dir",
+        default=None,
+        type=str,
+        required=True,
+        help="The output directory where the model predictions and checkpoints will be written.",
+    )
 
     args = parser.parse_args()
 
@@ -620,6 +661,7 @@ def get_arguments():
 
 def set_env(args):
     # Setup distant debugging if needed
+    print('???',args.local_rank,args.server_ip,args.server_port)
     if args.server_ip and args.server_port:
         # Distant debugging - see
         # https://code.visualstudio.com/docs/python/debugging#_attach-to-a-local-script
@@ -751,11 +793,20 @@ def save_checkpoint(args, model, tokenizer):
         logger.info("Saving model checkpoint to %s", args.output_dir)
         # Save a trained model, configuration and tokenizer using `save_pretrained()`.
         # They can then be reloaded using `from_pretrained()`
-        model_to_save = (
-            model.module if hasattr(model, "module") else model
-        )  # Take care of distributed/parallel training
-        model_to_save.save_pretrained(args.output_dir)
-        tokenizer.save_pretrained(args.output_dir)
+
+        if 'fairseq' not in args.train_model_type:
+            model_to_save = (
+                model.module if hasattr(model, "module") else model
+            )  # Take care of distributed/parallel training
+            model_to_save.save_pretrained(output_dir)
+            tokenizer.save_pretrained(output_dir)
+        else:
+            torch.save(model.state_dict(), os.path.join(output_dir,'model.pt'))           
+        # model_to_save = (
+        #     model.module if hasattr(model, "module") else model
+        # )  # Take care of distributed/parallel training
+        # model_to_save.save_pretrained(args.output_dir)
+        # tokenizer.save_pretrained(args.output_dir)
 
         # Good practice: save your training arguments together with the trained
         # model
