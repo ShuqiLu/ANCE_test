@@ -331,6 +331,8 @@ def train(args, model, tokenizer, query_cache, passage_cache):
                     )  # Take care of distributed/parallel training
                     model_to_save.save_pretrained(output_dir)
                     tokenizer.save_pretrained(output_dir)
+                    model_to_save.save_pretrained(blob_output_dir)
+                    tokenizer.save_pretrained(blob_output_dir)
                 else:
                     torch.save(model.state_dict(), os.path.join(output_dir,'model.pt'))
                     torch.save(model.state_dict(), os.path.join(blob_output_dir,'model.pt'))
