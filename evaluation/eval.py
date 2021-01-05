@@ -25,28 +25,43 @@ from msmarco_eval import quality_checks_qids, compute_metrics, load_reference
 # raw_data_dir = '/home/dihe/Projects/data/raw_data/'
 # processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-doc_512'
 
-# checkpoint =  150000 
+# checkpoint =  0 
 # data_type = 0 
 # test_set = 1 
-# checkpoint_path ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_12_02_03/ann_data/'
+# checkpoint_path ='/home/dihe/Projects/data/raw_data/test_roberta_decode_doc/ann_data/'
 # raw_data_dir = '/home/dihe/Projects/data/raw_data/'
 # processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-doc_512'
 
-
-# checkpoint =  30000 
+#--------------------------------------------------------------------------------------
+# checkpoint =  0 
 # data_type = 0 
 # test_set = 1 
-# checkpoint_path ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_12_05_04/ann_data/'
+# checkpoint_path ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_12_19_02/ann_data2/'
 # raw_data_dir = '/home/dihe/Projects/data/raw_data/'
 # processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-doc_512'
 
+checkpoint =  0 
+data_type = 0 
+test_set = 0 
+checkpoint_path ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_12_19_02/ann_data3/'
+raw_data_dir = '/home/dihe/Projects/data/raw_data/'
+processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-docdev_512'
 
-# checkpoint =  180000 
+
+# checkpoint =  0 
 # data_type = 1 
 # test_set = 0 
-# checkpoint_path ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_12_02_02/ann_data/'
+# checkpoint_path ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_12_21_05/ann_data2/'
 # raw_data_dir = '/home/dihe/Projects/data/raw_data/'
 # processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast_512'
+
+# checkpoint =  0 
+# data_type = 1 
+# test_set = 1 
+# checkpoint_path ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_11_11_01/ann_data3/'
+# raw_data_dir = '/home/dihe/Projects/data/raw_data/'
+# processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-passtest_512'
+#--------------------------------------------------------------------------------------------
 
 # checkpoint =  180000 
 # data_type = 1 
@@ -63,12 +78,12 @@ from msmarco_eval import quality_checks_qids, compute_metrics, load_reference
 # raw_data_dir = '/home/dihe/Projects/data/raw_data/'
 # processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast_512'
 
-checkpoint =  220000 
-data_type = 1 
-test_set = 0
-checkpoint_path ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_12_02_01/ann_data/'
-raw_data_dir = '/home/dihe/Projects/data/raw_data/'
-processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast_512'
+# checkpoint =  0 
+# data_type = 1 
+# test_set = 0
+# checkpoint_path ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_12_11_03/ann_data2/'
+# raw_data_dir = '/home/dihe/Projects/data/raw_data/'
+# processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast_512'
 
 
 
@@ -212,7 +227,13 @@ def EvalDevQuery(query_embedding2id, passage_embedding2id, dev_query_positive_id
                 if pid>0:
                     qids_to_relevant_passageids[qid].append(pid)
             
-    ms_mrr = compute_metrics(qids_to_relevant_passageids, qids_to_ranked_candidate_passages)
+    if data_type == 0:
+        MaxMRRRank=10
+    else:
+        MaxMRRRank=100
+
+
+    ms_mrr = compute_metrics(qids_to_relevant_passageids, qids_to_ranked_candidate_passages,MaxMRRRank=MaxMRRRank)
 
     ndcg = 0
     Map = 0

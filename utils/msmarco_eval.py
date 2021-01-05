@@ -16,32 +16,48 @@ from collections import Counter
 
 MaxMRRRank = 10
 
-def load_reference_from_stream(f):
+def load_reference_from_stream(f,data_type=1):
     """Load Reference reference relevant passages
     Args:f (stream): stream to load.
     Returns:qids_to_relevant_passageids (dict): dictionary mapping from query_id (int) to relevant passages (list of ints). 
     """
     qids_to_relevant_passageids = {}
-    for l in f:
-        try:
-            l = l.strip().split('\t')
-            qid = int(l[0])
-            if qid in qids_to_relevant_passageids:
-                pass
-            else:
-                qids_to_relevant_passageids[qid] = []
-            qids_to_relevant_passageids[qid].append(int(l[2]))
-        except:
-            raise IOError('\"%s\" is not valid format' % l)
+    if data_type==1:
+        for l in f:
+            try:
+                l = l.strip().split('\t')
+                qid = int(l[0])
+                if qid in qids_to_relevant_passageids:
+                    pass
+                else:
+                    qids_to_relevant_passageids[qid] = []
+                qids_to_relevant_passageids[qid].append(int(l[2]))
+            except:
+                raise IOError('\"%s\" is not valid format' % l)
+    else:
+        for l in f:
+            try:
+                l = l.strip().split(' ')
+                qid = int(l[0])
+                if qid in qids_to_relevant_passageids:
+                    pass
+                else:
+                    qids_to_relevant_passageids[qid] = []
+                if l[2].startswith('D'):
+                    qids_to_relevant_passageids[qid].append(int(l[2][1:]))
+                else:
+                    raise IOError('\"%s\" is not valid format' % l)
+            except:
+                raise IOError('\"%s\" is not valid format' % l)
     return qids_to_relevant_passageids
 
-def load_reference(path_to_reference):
+def load_reference(path_to_reference,data_type=1):
     """Load Reference reference relevant passages
     Args:path_to_reference (str): path to a file to load.
     Returns:qids_to_relevant_passageids (dict): dictionary mapping from query_id (int) to relevant passages (list of ints). 
     """
     with open(path_to_reference,'r') as f:
-        qids_to_relevant_passageids = load_reference_from_stream(f)
+        qids_to_relevant_passageids = load_reference_from_stream(f,data_type)
     return qids_to_relevant_passageids
 
 def load_candidate_from_stream(f):
@@ -106,7 +122,7 @@ def quality_checks_qids(qids_to_relevant_passageids, qids_to_ranked_candidate_pa
 
     return allowed, message
 
-def compute_metrics(qids_to_relevant_passageids, qids_to_ranked_candidate_passages):
+def compute_metrics(qids_to_relevant_passageids, qids_to_ranked_candidate_passages,MaxMRRRank=MaxMRRRank):
     """Compute MRR metric
     Args:    
     p_qids_to_relevant_passageids (dict): dictionary of query-passage mapping
@@ -134,7 +150,7 @@ def compute_metrics(qids_to_relevant_passageids, qids_to_ranked_candidate_passag
         raise IOError("No matching QIDs found. Are you sure you are scoring the evaluation set?")
     
     MRR = MRR/len(qids_to_relevant_passageids)
-    all_scores['MRR @10'] = MRR
+    all_scores['MRR @'+str(MaxMRRRank)] = MRR
     all_scores['QueriesRanked'] = len(qids_to_ranked_candidate_passages)
     return all_scores
                 

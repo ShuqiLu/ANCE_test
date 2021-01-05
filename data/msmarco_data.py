@@ -34,7 +34,8 @@ def write_query_rel(args, pid2offset, query_file, positive_id_file, out_query_fi
         if args.data_type == 0:
             tsvreader = csv.reader(f, delimiter=" ")
         else:
-            tsvreader = csv.reader(f, delimiter="\t")
+            #tsvreader = csv.reader(f, delimiter="\t")
+            tsvreader = csv.reader(f, delimiter=" ")
         for [topicid, _, docid, rel] in tsvreader:
             query_positive_id.add(int(topicid))
 
@@ -105,7 +106,8 @@ def write_query_rel(args, pid2offset, query_file, positive_id_file, out_query_fi
         if args.data_type == 0:
             tsvreader = csv.reader(f, delimiter=" ")
         else:
-            tsvreader = csv.reader(f, delimiter="\t")
+            # tsvreader = csv.reader(f, delimiter="\t")
+            tsvreader = csv.reader(f, delimiter=" ")
         out_line_count = 0
         for [topicid, _, docid, rel] in tsvreader:
             topicid = int(topicid)
@@ -188,6 +190,20 @@ def preprocess(args):
     print("done saving pid2offset")
 
     if args.data_type == 0:
+        # write_query_rel(
+        #     args,
+        #     pid2offset,
+        #     "msmarco-doctrain-queries.tsv",
+        #     "msmarco-doctrain-qrels.tsv",
+        #     "train-query",
+        #     "train-qrel.tsv")
+        # write_query_rel(
+        #     args,
+        #     pid2offset,
+        #     "msmarco-test2019-queries.tsv",
+        #     "2019qrels-docs.txt",
+        #     "dev-query",
+        #     "dev-qrel.tsv")
         write_query_rel(
             args,
             pid2offset,
@@ -198,23 +214,37 @@ def preprocess(args):
         write_query_rel(
             args,
             pid2offset,
-            "msmarco-test2019-queries.tsv",
-            "2019qrels-docs.txt",
+            "msmarco-docdev-queries.tsv",
+            "msmarco-docdev-qrels.tsv",
             "dev-query",
             "dev-qrel.tsv")
     else:
+        # write_query_rel(
+        #     args,
+        #     pid2offset,
+        #     "queries.train.tsv",
+        #     "qrels.train.tsv",
+        #     "train-query",
+        #     "train-qrel.tsv")
+        # write_query_rel(
+        #     args,
+        #     pid2offset,
+        #     "queries.dev.small.tsv",
+        #     "qrels.dev.small.tsv",
+        #     "dev-query",
+        #     "dev-qrel.tsv")
         write_query_rel(
             args,
             pid2offset,
-            "queries.train.tsv",
-            "qrels.train.tsv",
+            "msmarco-test2019-queries.tsv",
+            "2019qrels-pass.txt",
             "train-query",
             "train-qrel.tsv")
         write_query_rel(
             args,
             pid2offset,
-            "queries.dev.small.tsv",
-            "qrels.dev.small.tsv",
+            "msmarco-test2019-queries.tsv",
+            "2019qrels-pass.txt",
             "dev-query",
             "dev-qrel.tsv")
 
@@ -229,11 +259,11 @@ def PassagePreprocessingFn(args, line, tokenizer):
         p_text = line_arr[3].rstrip()
 
         if 'fast' in args.train_model_type:
-            full_text = url + "[SEP]" + title + "[SEP]" + p_text
+            full_text = url.lower() + " [SEP] " + title.lower() + " [SEP] " + p_text.lower()
         elif 'fairseq' in args.train_model_type:
-            full_text = url + "</s>" + title + "</s>" + p_text
+            full_text = url + " </s> " + title + " </s> " + p_text
         else:
-            full_text = url + "<sep>" + title + "<sep>" + p_text
+            full_text = url + " <sep> " + title + "<sep>" + p_text
         # keep only first 10000 characters, should be sufficient for any
         # experiment that uses less than 500 - 1k tokens
         full_text = full_text[:args.max_doc_character]
@@ -261,7 +291,12 @@ def PassagePreprocessingFn(args, line, tokenizer):
             full_text, add_special_tokens=True, max_length=args.max_seq_length,)
         pad_token_id=tokenizer.pad_token_id
     elif 'fast' in args.train_model_type:
-        full_text=full_text.lower()
+        if args.data_type == 1:
+            full_text=full_text.lower()
+        # else:
+        #     full_text=full_text.lower()
+        #full_text = url.lower() + "[SEP]" + title.lower() + "[SEP]" + p_text.lower()
+        #full_text=full_text.lower()
         passage =tokenizer.encode(full_text, add_special_tokens=True).ids[:args.max_seq_length]
         pad_token_id=1
     else:

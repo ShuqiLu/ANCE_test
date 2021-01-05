@@ -21,34 +21,34 @@
 # and training will start immediately
 
 # # Passage ANCE(FirstP) 
-# gpu_no=1
-# seq_length=512
-# model_type=rdot_nll
-# tokenizer_type="roberta-base"
-# base_data_dir="../../data/raw_data/"
-# preprocessed_data_dir="${base_data_dir}ann_data_${tokenizer_type}_${seq_length}/"
-# job_name="OSPass512_test"
-# pretrained_checkpoint_dir='../../data/model_temp/Checkpoint'
-# data_type=1
-# warmup_steps=5000
-# per_gpu_train_batch_size=8
-# gradient_accumulation_steps=2
-# learning_rate=1e-6
-
-# Document ANCE(FirstP) 
-gpu_no=4
+gpu_no=1
 seq_length=512
-tokenizer_type="roberta-base-doc"
-model_type=rdot_nll
+model_type=rdot_nll_fairseq_fast
+tokenizer_type="roberta-base-fast-passtest"
 base_data_dir="../../data/raw_data/"
 preprocessed_data_dir="${base_data_dir}ann_data_${tokenizer_type}_${seq_length}/"
-job_name="OSDoc512_test"
+job_name="OSPass512_test"
 pretrained_checkpoint_dir='../../data/model_temp/Checkpoint'
-data_type=0
-warmup_steps=3000
+data_type=1
+warmup_steps=5000
 per_gpu_train_batch_size=8
 gradient_accumulation_steps=2
-learning_rate=5e-6
+learning_rate=1e-6
+
+# Document ANCE(FirstP) 
+# gpu_no=4
+# seq_length=512
+# tokenizer_type="roberta-base-doc"
+# model_type=rdot_nll
+# base_data_dir="../../data/raw_data/"
+# preprocessed_data_dir="${base_data_dir}ann_data_${tokenizer_type}_${seq_length}/"
+# job_name="OSDoc512_test"
+# pretrained_checkpoint_dir='../../data/model_temp/Checkpoint'
+# data_type=0
+# warmup_steps=3000
+# per_gpu_train_batch_size=8
+# gradient_accumulation_steps=2
+# learning_rate=5e-6
 
 # # Document ANCE(MaxP) 
 # gpu_no=8
