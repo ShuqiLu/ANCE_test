@@ -81,7 +81,7 @@ def dual_process_fn_doc(line, i, tokenizer, args):
                 text, add_special_tokens=True, max_length=args.max_seq_length,)
             pad_token_id=tokenizer.pad_token_id
         elif 'fast' in args.train_model_type:
-            text=text.lower()
+            #text=text.lower()
             input_id_a=tokenizer.encode(text, add_special_tokens=True).ids[:args.max_seq_length]
             pad_token_id=1
         else:
