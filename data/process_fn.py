@@ -75,7 +75,8 @@ def dual_process_fn_doc(line, i, tokenizer, args):
         else:
             text = url + " <sep> " + title + "<sep>" + p_text
 
-        text = cells[1].strip()
+        #text = cells[1].strip()
+        text=text[:10000]
         if 'fairseq' not in args.train_model_type:
             input_id_a = tokenizer.encode(
                 text, add_special_tokens=True, max_length=args.max_seq_length,)
@@ -139,14 +140,16 @@ def triple_process_fn(line, i, tokenizer, args,data_type=1):
         mask_padding_with_zero = True
         pad_token_segment_id = 0
         pad_on_left = False
-
+        cell_index=0
         for text in cells:
+            cell_index+=1
             if 'fairseq' not in args.train_model_type:
                 input_id_a = tokenizer.encode(
                     text.strip(), add_special_tokens=True, max_length=args.max_seq_length,)
                 pad_token_id=tokenizer.pad_token_id
             elif 'fast' in args.train_model_type:
-                if data_type==1:
+                #if data_type==1:
+                if cell_index ==1:
                     text=text.lower()
                 # if getattr(args, "data_type", 1)==1:
                 #     text=text.lower()
