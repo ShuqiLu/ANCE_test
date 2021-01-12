@@ -43,7 +43,7 @@ from msmarco_eval import quality_checks_qids, compute_metrics, load_reference
 checkpoint =  0 
 data_type = 0 
 test_set = 0 
-checkpoint_path ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_12_19_02/ann_data3/'
+checkpoint_path ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_12_23_02/ann_data4/'
 raw_data_dir = '/home/dihe/Projects/data/raw_data/'
 processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-docdev_512'
 
@@ -228,9 +228,9 @@ def EvalDevQuery(query_embedding2id, passage_embedding2id, dev_query_positive_id
                     qids_to_relevant_passageids[qid].append(pid)
             
     if data_type == 0:
-        MaxMRRRank=10
-    else:
         MaxMRRRank=100
+    else:
+        MaxMRRRank=10
 
 
     ms_mrr = compute_metrics(qids_to_relevant_passageids, qids_to_ranked_candidate_passages,MaxMRRRank=MaxMRRRank)

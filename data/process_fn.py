@@ -98,6 +98,7 @@ def dual_process_fn_doc(line, i, tokenizer, args):
             attention_mask_a, dtype=torch.bool), torch.tensor(token_type_ids_a, dtype=torch.uint8)]
         qid = int(cells[0].strip('D'))
         features.append(qid)
+        #print('doc: ',text)
     elif len(cells) == 2:
         mask_padding_with_zero = True
         pad_token_segment_id = 0
@@ -125,6 +126,7 @@ def dual_process_fn_doc(line, i, tokenizer, args):
             attention_mask_a, dtype=torch.bool), torch.tensor(token_type_ids_a, dtype=torch.uint8)]
         qid = int(cells[0])
         features.append(qid)
+        #print('query: ',input_id_a)
     else:
         raise Exception(
             "Line doesn't have correct length: {0}. Expected 2.".format(str(len(cells))))
@@ -149,12 +151,17 @@ def triple_process_fn(line, i, tokenizer, args,data_type=1):
                 pad_token_id=tokenizer.pad_token_id
             elif 'fast' in args.train_model_type:
                 #if data_type==1:
-                if cell_index ==1:
+                if cell_index ==1 or data_type==1:
                     text=text.lower()
+
                 # if getattr(args, "data_type", 1)==1:
                 #     text=text.lower()
                 # print('???',args.data_type)
                 input_id_a=tokenizer.encode(text.strip(), add_special_tokens=True).ids[:args.max_seq_length]
+                # if cell_index ==1:
+                #     print('query: ',input_id_a)
+                # else:
+                #     print('cell_index: ',cell_index,input_id_a)
                 pad_token_id=1
             else:
                 text=text.lower()
