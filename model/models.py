@@ -711,7 +711,7 @@ configs = [
                 use_mean=False,
                 #config_class=,
                 ),
-    MSMarcoConfig(name="RobertaDot_NLL_LN_fairseq_fast_zero",
+    MSMarcoConfig(name="rdot_nll_fairseq_fast_zero",
                 model=RobertaDot_NLL_LN_fairseq_fast_zero,
                 use_mean=False,
                 #config_class=,
