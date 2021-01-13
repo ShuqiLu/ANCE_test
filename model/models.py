@@ -396,8 +396,8 @@ class RobertaDot_NLL_LN_fairseq_fast_zero(NLL,nn.Module):
             # for item in pretrained_dict.keys():
             #     if item not in model_dict:
             #         print('???',item)
-            #assert len(model_dict)-4==len(pretrained_dict), (len(model_dict),len(pretrained_dict),model_dict,pretrained_dict)
-            assert len(model_dict)==len(pretrained_dict)
+            assert len(model_dict)-4==len(pretrained_dict), (len(model_dict),len(pretrained_dict),model_dict,pretrained_dict)
+            #assert len(model_dict)==len(pretrained_dict)
         else:
             for name in save_model:
                 pretrained_dict[name[7:]]=save_model[name]
