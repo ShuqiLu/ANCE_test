@@ -101,6 +101,7 @@ class NLL(EmbeddingMixin):
         return (loss.mean(),)
 
 
+
 class NLL_MultiChunk(EmbeddingMixin):
     def forward(
             self,
@@ -350,9 +351,13 @@ class RobertaDot_NLL_LN_fairseq_fast_zero(NLL,nn.Module):
                 q_noise=0.0,
                 qn_block_size=8,
         )
-        # self.embeddingHead = nn.Linear(config.hidden_size, 768)
-        # self.norm = nn.LayerNorm(768)
+        self.embeddingHead = nn.Linear(config.hidden_size, 768)
+        self.norm = nn.LayerNorm(768)
         self.apply(self._init_weights)
+        for name, param in self.named_parameters():
+            if name.startswith('encode'):
+                print('fix: ',name)
+                param.requires_grad=False
 
     def query_emb(self, input_ids, attention_mask):
         #print('???input_ids',input_ids.shape)
@@ -360,9 +365,9 @@ class RobertaDot_NLL_LN_fairseq_fast_zero(NLL,nn.Module):
         #print('???',outputs1)
         outputs1=outputs1[-1].transpose(0,1)
         full_emb = self.masked_mean_or_first(outputs1, attention_mask)
-        #query1 = self.norm(self.embeddingHead(full_emb))
-        query_norm=torch.norm(full_emb,dim=1).unsqueeze(-1)
-        query1=full_emb/query_norm
+        query1 = self.norm(self.embeddingHead(full_emb))
+        # query_norm=torch.norm(full_emb,dim=1).unsqueeze(-1)
+        # query1=full_emb/query_norm
         return query1
 
     def body_emb(self, input_ids, attention_mask):
@@ -404,6 +409,7 @@ class RobertaDot_NLL_LN_fairseq_fast_zero(NLL,nn.Module):
         
         model_dict.update(pretrained_dict)
         self.load_state_dict(model_dict)
+
 
 class RobertaDot_NLL_LN_fairseq_fast2(NLL,nn.Module):
     """None
