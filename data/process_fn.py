@@ -174,6 +174,43 @@ def triple_process_fn(line, i, tokenizer, args,data_type=1):
                 input_id_a, attention_mask_a, token_type_ids_a, args.max_seq_length, pad_token_id, mask_padding_with_zero, pad_token_segment_id, pad_on_left)
             features += [torch.tensor(input_id_a, dtype=torch.int),
                          torch.tensor(attention_mask_a, dtype=torch.bool)]
+    elif len(cells)==2:
+        mask_padding_with_zero = True
+        pad_token_segment_id = 0
+        pad_on_left = False
+        cell_index=0
+        for text in cells:
+            cell_index+=1
+            if 'fairseq' not in args.train_model_type:
+                input_id_a = tokenizer.encode(
+                    text.strip(), add_special_tokens=True, max_length=args.max_seq_length,)
+                pad_token_id=tokenizer.pad_token_id
+            elif 'fast' in args.train_model_type:
+                #if data_type==1:
+                # if cell_index ==1 or data_type==1:
+                #     text=text.lower()
+
+                # if getattr(args, "data_type", 1)==1:
+                #     text=text.lower()
+                # print('???',args.data_type)
+                input_id_a=tokenizer.encode(text.strip(), add_special_tokens=True).ids[:args.max_seq_length]
+                #print('???',input_id_a)
+                # if cell_index ==1:
+                #     print('query: ',input_id_a)
+                # else:
+                #     print('cell_index: ',cell_index,input_id_a)
+                pad_token_id=1
+            else:
+                text=text.lower()
+                input_id_a=list(np.array( tokenizer.encode(text.strip())[:args.max_seq_length]))
+                pad_token_id=1
+            token_type_ids_a = [0] * len(input_id_a)
+            attention_mask_a = [
+                1 if mask_padding_with_zero else 0] * len(input_id_a)
+            input_id_a, attention_mask_a, token_type_ids_a = pad_ids(
+                input_id_a, attention_mask_a, token_type_ids_a, args.max_seq_length, pad_token_id, mask_padding_with_zero, pad_token_segment_id, pad_on_left)
+            features += [torch.tensor(input_id_a, dtype=torch.int),
+                         torch.tensor(attention_mask_a, dtype=torch.bool)]
     else:
         raise Exception(
             "Line doesn't have correct length: {0}. Expected 3.".format(str(len(cells))))

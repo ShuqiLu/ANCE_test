@@ -100,6 +100,112 @@ class NLL(EmbeddingMixin):
         loss = -1.0 * lsm[:, 0]
         return (loss.mean(),)
 
+class NLL_concat(EmbeddingMixin):
+    def forward(
+            self,
+            # query_ids,
+            # attention_mask_q,
+            input_ids_a=None,
+            attention_mask_a=None,
+            input_ids_b=None,
+            attention_mask_b=None,
+            is_query=True):
+        # if input_ids_b is None and is_query:
+        #     return self.query_emb(query_ids, attention_mask_q)
+        # elif input_ids_b is None:
+        #     return self.body_emb(query_ids, attention_mask_q)
+
+        #q_embs = self.query_emb(query_ids, attention_mask_q)
+        a_embs = self.body_emb(input_ids_a, attention_mask_a)
+        b_embs = self.body_emb(input_ids_b, attention_mask_b)
+
+        #print('???',q_embs.shape,a_embs.shape)
+
+        # logit_matrix = torch.cat([(q_embs * a_embs).sum(-1).unsqueeze(1),
+        #                           (q_embs * b_embs).sum(-1).unsqueeze(1)], dim=1)  # [B, 2]
+        logit_matrix = torch.cat([a_embs,
+                                  b_embs], dim=1)  # [B, 2]
+        #print('???',logit_matrix.shape,logit_matrix)
+        lsm = F.log_softmax(logit_matrix, dim=1)
+        #print('???lsm',lsm)
+        #assert 1==0
+        loss = -1.0 * lsm[:, 0]
+        #print('???loss',loss)
+        #assert 1==0
+        return (loss.mean(),)
+
+class RobertaDot_NLL_LN_fairseq_fast_concat(NLL_concat,nn.Module):
+    """None
+    Compress embedding to 200d, then computes NLL loss.
+    """
+    def __init__(self, config, model_argobj=None):
+        nn.Module.__init__(self)
+        NLL_concat.__init__(self, model_argobj)
+        
+        self.encoder=TransformerSentenceEncoder(
+                padding_idx=1,
+                vocab_size=32769,
+                num_encoder_layers=12,
+                embedding_dim=768,
+                ffn_embedding_dim=3072,
+                num_attention_heads=12,
+                dropout=0.1,
+                attention_dropout=0.1,
+                activation_dropout=0.0,
+                layerdrop=0.0,
+                max_seq_len=512,
+                num_segments=0,
+                encoder_normalize_before=True,
+                apply_bert_init=True,
+                activation_fn="gelu",
+                q_noise=0.0,
+                qn_block_size=8,
+        )
+        self.embeddingHead = nn.Linear(config.hidden_size, 1)
+        
+        self.apply(self._init_weights)
+        
+    def query_emb(self, input_ids, attention_mask):
+        #print('???input_ids',input_ids.shape)
+        outputs1, _ = self.encoder(input_ids)#[-1].transpose(0,1)
+        #print('???',outputs1)
+        outputs1=outputs1[-1].transpose(0,1)
+        full_emb = self.masked_mean_or_first(outputs1, attention_mask)
+        query1 = self.embeddingHead(full_emb)
+        # query_norm=torch.norm(full_emb,dim=1).unsqueeze(-1)
+        # query1=full_emb/query_norm
+        return query1
+
+    def body_emb(self, input_ids, attention_mask):
+        return self.query_emb(input_ids, attention_mask)
+
+    #tikenid pad
+    def from_pretrained(self, model_path):
+        model_dict = self.state_dict()
+        save_model=torch.load(model_path, map_location=lambda storage, loc: storage)
+        #print(save_model['model'].keys())
+        pretrained_dict= {}
+        # print('???model_dict',model_dict.keys(),len(model_dict.keys()))
+        # print('???save_model',save_model['model'].keys(),len(save_model['model'].keys()))
+        if 'model' in save_model.keys():
+            #save_model['model']
+            for name in save_model['model']:
+                if 'lm_head' not in name and 'encoder' in name and 'decode' not in name:
+                    pretrained_dict['encoder'+name[24:]]=save_model['model'][name]
+  
+            assert len(model_dict)-2==len(pretrained_dict), (len(model_dict),len(pretrained_dict),model_dict.keys(),pretrained_dict.keys())
+            #assert len(model_dict)==len(pretrained_dict)
+        else:
+            for name in save_model:
+                pretrained_dict[name[7:]]=save_model[name]
+            assert len(model_dict)==len(pretrained_dict)
+
+        #print(model_dict.keys())
+        print('load model.... ',len(model_dict),len(pretrained_dict))
+        print(pretrained_dict.keys())
+        
+        model_dict.update(pretrained_dict)
+        self.load_state_dict(model_dict)
 
 
 class NLL_MultiChunk(EmbeddingMixin):
@@ -721,6 +827,11 @@ configs = [
                 ),
     MSMarcoConfig(name="rdot_nll_fairseq_fast_zero",
                 model=RobertaDot_NLL_LN_fairseq_fast_zero,
+                use_mean=False,
+                #config_class=,
+                ),
+    MSMarcoConfig(name="rdot_nll_fairseq_fast_concat",
+                model=RobertaDot_NLL_LN_fairseq_fast_concat,
                 use_mean=False,
                 #config_class=,
                 ),
