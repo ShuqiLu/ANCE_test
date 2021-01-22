@@ -9,7 +9,12 @@ from transformers import (
     RobertaTokenizer,
     BertModel,
     BertTokenizer,
-    BertConfig
+    BertConfig,
+    BertForSequenceClassification, 
+    ElectraTokenizer, 
+    ElectraModel,
+    ElectraForSequenceClassification,
+    ElectraConfig
 )
 import torch.nn.functional as F
 from data.process_fn import triple_process_fn, triple2dual_process_fn
@@ -23,6 +28,9 @@ from fairseq.modules import (
 from fairseq.modules import (
     TransformerSentenceEncoder,
 )
+from transformers import ElectraTokenizer, ElectraModel
+from transformers import AutoTokenizer, AutoModel
+
 
 class EmbeddingMixin:
     """
@@ -275,6 +283,61 @@ class RobertaDot_NLL_LN(NLL, RobertaForSequenceClassification):
 
     def query_emb(self, input_ids, attention_mask):
         outputs1 = self.roberta(input_ids=input_ids,
+                                attention_mask=attention_mask)
+        full_emb = self.masked_mean_or_first(outputs1, attention_mask)
+        query1 = self.norm(self.embeddingHead(full_emb))
+        return query1
+
+    def body_emb(self, input_ids, attention_mask):
+        return self.query_emb(input_ids, attention_mask)
+
+class ELECTRA_Dot_NLL_LN(NLL,ElectraForSequenceClassification):
+    """None
+    Compress embedding to 200d, then computes NLL loss.
+    """
+
+    def __init__(self,config, model_argobj=None):
+        NLL.__init__(self, model_argobj)
+        ElectraForSequenceClassification.__init__(self, config)
+        
+        self.embeddingHead = nn.Linear(768, 768)
+        self.norm = nn.LayerNorm(768)
+        self.apply(self._init_weights)
+        # self.model= ElectraModel.from_pretrained('google/electra-base-discriminator')
+        # self.tokenizer = ElectraTokenizer.from_pretrained('google/electra-base-discriminator')
+
+        # for name, param in self.named_parameters():
+        #     print(name,param.requires_grad)#=False
+
+    def query_emb(self, input_ids, attention_mask):
+        outputs1 = self.electra(input_ids=input_ids,
+                                attention_mask=attention_mask)
+        full_emb = self.masked_mean_or_first(outputs1, attention_mask)
+        #print('???',full_emb.shape)
+        query1 = self.norm(self.embeddingHead(full_emb))
+        return query1
+
+    def body_emb(self, input_ids, attention_mask):
+        return self.query_emb(input_ids, attention_mask)
+
+class ERNIE2Dot_NLL_LN(NLL,BertForSequenceClassification):
+    """None
+    Compress embedding to 200d, then computes NLL loss.
+    """
+    def __init__(self, config, model_argobj=None):
+        NLL.__init__(self, model_argobj)
+        BertForSequenceClassification.__init__(self, config)
+        self.embeddingHead = nn.Linear(768, 768)
+        self.norm = nn.LayerNorm(768)
+        self.apply(self._init_weights)
+        # for name, param in self.named_parameters():
+        #     print(name,param.requires_grad)
+        #RobertaForSequenceClassification.__init__(self, config)
+        
+        # self.tokenizer = AutoTokenizer.from_pretrained("nghuyong/ernie-2.0-en")
+        # self.model = AutoModel.from_pretrained("nghuyong/ernie-2.0-en")
+    def query_emb(self, input_ids, attention_mask):
+        outputs1 = self.bert(input_ids=input_ids,
                                 attention_mask=attention_mask)
         full_emb = self.masked_mean_or_first(outputs1, attention_mask)
         query1 = self.norm(self.embeddingHead(full_emb))
@@ -810,6 +873,24 @@ configs = [
                 config_class=BertConfig,
                 use_mean=False,
                 ),
+    MSMarcoConfig(name="ELECTRA_Dot_NLL_LN",
+                model=ELECTRA_Dot_NLL_LN,
+                tokenizer_class=ElectraTokenizer,
+                config_class=ElectraConfig,
+                use_mean=False,
+                ),
+    # MSMarcoConfig(name="ERNIE2Dot_NLL_LN",
+    #             model=ERNIE2Dot_NLL_LN,
+    #             use_mean=False,
+    #             ),
+    MSMarcoConfig(name="ERNIE2Dot_NLL_LN",
+                model=ERNIE2Dot_NLL_LN,
+                tokenizer_class=BertTokenizer,
+                config_class=BertConfig,
+                use_mean=False,
+                ),
+
+
     MSMarcoConfig(name="rdot_nll_fairseq",
                 model=RobertaDot_NLL_LN_fairseq,
                 use_mean=False,

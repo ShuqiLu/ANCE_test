@@ -311,6 +311,10 @@ def load_stuff(model_type, args):
     model_args = type('', (), {})()
     model_args.use_mean = configObj.use_mean
     
+    # if 'ELECTRA' in args.train_model_type:
+    #     config=None
+    #     model=configObj.model_class()
+    #     tokenizer=model.tokenizer
     if 'fairseq' not in args.train_model_type:
         config = configObj.config_class.from_pretrained(
             args.config_name if args.config_name else args.model_name_or_path,
@@ -387,7 +391,7 @@ def get_arguments():
         "--model_name_or_path",
         default=None,
         type=str,
-        required=True,
+        #required=True,
     )
     parser.add_argument(
         "--model_file",
