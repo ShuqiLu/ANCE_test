@@ -273,7 +273,6 @@ def compute_mrr_last(D, I, qids, ref_dict,dev_query_positive_id):
             for pid in sorted_I[i]:
                 if pid >= 0 and pid not in seen_pids:
                     #candidate_dict[qid][j] = pid
-                    rank += 1
                     prediction[qid][pid] =  -(j+1)#-rank
                     j += 1
                     seen_pids.add(pid)
