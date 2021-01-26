@@ -254,6 +254,7 @@ def compute_mrr_last(D, I, qids, ref_dict,dev_query_positive_id):
     knn_pkl = {"D": D, "I": I}
     all_knn_list = all_gather(knn_pkl)
     mrr = 0.0
+    final_recall=0.0
     if is_first_worker():
         prediction = {}
         D_merged = concat_key(all_knn_list, "D", axis=1)
