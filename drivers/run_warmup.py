@@ -12,7 +12,7 @@ from transformers import (
     RobertaModel,
 )
 import transformers
-from utils.eval_mrr import passage_dist_eval
+from utils.eval_mrr import passage_dist_eval,passage_dist_eval_last
 from model.models import MSMarcoConfigDict
 from utils.lamb import Lamb
 import os
@@ -772,9 +772,12 @@ def evaluation(args, model, tokenizer):
             model.eval()
             reranking_mrr, full_ranking_mrr = passage_dist_eval(
                 args, model, tokenizer)
+            recall = passage_dist_eval_last(
+                args, model, tokenizer)
             if is_first_worker():
                 print(
                     "Reranking/Full ranking mrr: {0}/{1}".format(str(reranking_mrr), str(full_ranking_mrr)))
+                print('recall@1000: ',recall)
             dist.barrier()
     return results
 
@@ -801,9 +804,13 @@ def main():
             logger.info(" global_step = %s, average loss = %s",
                         global_step, tr_loss)
 
+    print('eval...')
+    results = evaluation(args, model, tokenizer)
+
+
     save_checkpoint(args, model, tokenizer)
 
-    results = evaluation(args, model, tokenizer)
+    
     return results
 
 

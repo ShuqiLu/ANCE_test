@@ -149,6 +149,7 @@ def triple_process_fn(line, i, tokenizer, args,data_type=1):
                 input_id_a = tokenizer.encode(
                     text.strip(), add_special_tokens=True, max_length=args.max_seq_length,)
                 pad_token_id=tokenizer.pad_token_id
+                print('???',input_id_a)
             elif 'fast' in args.train_model_type:
                 #if data_type==1:
                 if cell_index ==1 or data_type==1:
