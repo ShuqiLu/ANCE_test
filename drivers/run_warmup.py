@@ -811,6 +811,7 @@ def main():
         #         args, model, tokenizer, f, train_fn)
         #     logger.info(" global_step = %s, average loss = %s",
         #                 global_step, tr_loss)
+        print('training file: ',args.training_file)
         with open(args.data_dir+'/'+args.training_file, encoding="utf-8-sig") as f:
             train_batch_size = args.per_gpu_train_batch_size * \
                 max(1, args.n_gpu)
