@@ -673,6 +673,12 @@ def get_arguments():
         default="", 
         help="For distant debugging.",
     )
+    parser.add_argument(
+        "--training_file", 
+        type=str,
+        default="triples.train.small.tsv", 
+        help="For distant debugging.",
+    )
 
     args = parser.parse_args()
 
@@ -798,7 +804,14 @@ def main():
         def train_fn(line, i):
             return configObj.process_fn(line, i, tokenizer, args)
 
-        with open(args.data_dir+"/triples.train.small.tsv", encoding="utf-8-sig") as f:
+        # with open(args.data_dir+"/triples.train.small.tsv", encoding="utf-8-sig") as f:
+        #     train_batch_size = args.per_gpu_train_batch_size * \
+        #         max(1, args.n_gpu)
+        #     global_step, tr_loss = train(
+        #         args, model, tokenizer, f, train_fn)
+        #     logger.info(" global_step = %s, average loss = %s",
+        #                 global_step, tr_loss)
+        with open(args.data_dir+'/'+args.training_file, encoding="utf-8-sig") as f:
             train_batch_size = args.per_gpu_train_batch_size * \
                 max(1, args.n_gpu)
             global_step, tr_loss = train(
@@ -806,8 +819,8 @@ def main():
             logger.info(" global_step = %s, average loss = %s",
                         global_step, tr_loss)
 
-    print('eval...')
-    results = evaluation(args, model, tokenizer)
+    # print('eval...')
+    # results = evaluation(args, model, tokenizer)
 
 
     save_checkpoint(args, model, tokenizer)
