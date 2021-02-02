@@ -463,10 +463,13 @@ def EvalDevQuery(
 
     for k in result.keys():
         eval_query_cnt += 1
-        ndcg += result[k]["ndcg_cut_10"]
+        #ndcg += result[k]["ndcg_cut_10"]
+        ndcg += result[k]["map_cut_10"]
 
+    # final_ndcg = ndcg / eval_query_cnt
+    # print("Rank:" + str(args.rank) + " --- ANN NDCG@10:" + str(final_ndcg))
     final_ndcg = ndcg / eval_query_cnt
-    print("Rank:" + str(args.rank) + " --- ANN NDCG@10:" + str(final_ndcg))
+    print("Rank:" + str(args.rank) + " --- ANN MRR@10:" + str(final_ndcg))
 
     return final_ndcg, eval_query_cnt
 

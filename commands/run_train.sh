@@ -24,7 +24,7 @@
 gpu_no=1
 seq_length=512
 model_type=rdot_nll_fairseq_fast
-tokenizer_type="roberta-base-fast-passtest"
+tokenizer_type="roberta-base-fast-passsmall10"
 base_data_dir="../../data/raw_data/"
 preprocessed_data_dir="${base_data_dir}ann_data_${tokenizer_type}_${seq_length}/"
 job_name="OSPass512_test"
@@ -66,13 +66,19 @@ learning_rate=1e-6
 # learning_rate=1e-5
 
 ##################################### Data Preprocessing ################################
-model_dir="${base_data_dir}${job_name}/"
-model_ann_data_dir="${model_dir}ann_data/"
+# model_dir="${base_data_dir}${job_name}/"
+# model_ann_data_dir="${model_dir}ann_data/"
+
+# preprocess_cmd="\
+# python ../data/msmarco_data.py --data_dir $base_data_dir --out_data_dir $preprocessed_data_dir --train_model_type $model_type \
+# --model_name_or_path roberta-base --max_seq_length $seq_length --data_type $data_type\
+# "
 
 preprocess_cmd="\
-python ../data/msmarco_data.py --data_dir $base_data_dir --out_data_dir $preprocessed_data_dir --train_model_type $model_type \
---model_name_or_path roberta-base --max_seq_length $seq_length --data_type $data_type\
+python ../data/msmarco_data.py --data_dir $base_data_dir --out_data_dir $preprocessed_data_dir --train_model_type $model_type --model_file checkpoint_best.pt  \
+--model_name_or_path ../../data/model_temp --max_seq_length $seq_length --data_type $data_type --bpe_vocab_file ../../data/bert-16g-0930/vocab.txt\
 "
+
 
 echo $preprocess_cmd
 eval $preprocess_cmd

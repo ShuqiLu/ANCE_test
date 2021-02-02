@@ -34,8 +34,8 @@ def write_query_rel(args, pid2offset, query_file, positive_id_file, out_query_fi
         if args.data_type == 0:
             tsvreader = csv.reader(f, delimiter=" ")
         else:
-            #tsvreader = csv.reader(f, delimiter="\t")
-            tsvreader = csv.reader(f, delimiter=" ")
+            tsvreader = csv.reader(f, delimiter="\t")
+            #tsvreader = csv.reader(f, delimiter=" ")
         for [topicid, _, docid, rel] in tsvreader:
             query_positive_id.add(int(topicid))
 
@@ -106,8 +106,8 @@ def write_query_rel(args, pid2offset, query_file, positive_id_file, out_query_fi
         if args.data_type == 0:
             tsvreader = csv.reader(f, delimiter=" ")
         else:
-            # tsvreader = csv.reader(f, delimiter="\t")
-            tsvreader = csv.reader(f, delimiter=" ")
+            tsvreader = csv.reader(f, delimiter="\t")
+            #tsvreader = csv.reader(f, delimiter=" ")
         out_line_count = 0
         for [topicid, _, docid, rel] in tsvreader:
             topicid = int(topicid)
@@ -219,34 +219,34 @@ def preprocess(args):
             "dev-query",
             "dev-qrel.tsv")
     else:
-        # write_query_rel(
-        #     args,
-        #     pid2offset,
-        #     "queries.train.tsv",
-        #     "qrels.train.tsv",
-        #     "train-query",
-        #     "train-qrel.tsv")
-        # write_query_rel(
-        #     args,
-        #     pid2offset,
-        #     "queries.dev.small.tsv",
-        #     "qrels.dev.small.tsv",
-        #     "dev-query",
-        #     "dev-qrel.tsv")
         write_query_rel(
             args,
             pid2offset,
-            "msmarco-test2019-queries.tsv",
-            "2019qrels-pass.txt",
+            "queries.train.tsv",
+            "qrels.train.sample10.tsv",
             "train-query",
             "train-qrel.tsv")
         write_query_rel(
             args,
             pid2offset,
-            "msmarco-test2019-queries.tsv",
-            "2019qrels-pass.txt",
+            "queries.dev.small.tsv",
+            "qrels.dev.small.tsv",
             "dev-query",
             "dev-qrel.tsv")
+        # write_query_rel(
+        #     args,
+        #     pid2offset,
+        #     "msmarco-test2019-queries.tsv",
+        #     "2019qrels-pass.txt",
+        #     "train-query",
+        #     "train-qrel.tsv")
+        # write_query_rel(
+        #     args,
+        #     pid2offset,
+        #     "msmarco-test2019-queries.tsv",
+        #     "2019qrels-pass.txt",
+        #     "dev-query",
+        #     "dev-qrel.tsv")
 
 
 def PassagePreprocessingFn(args, line, tokenizer):
