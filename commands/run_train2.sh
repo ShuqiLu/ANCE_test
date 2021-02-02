@@ -24,8 +24,8 @@
 gpu_no=4
 seq_length=512
 model_type=rdot_nll_fairseq_fast
-# tokenizer_type="roberta-base-fast-passtest"
-tokenizer_type="roberta-base-fast-docdev2"
+tokenizer_type="roberta-base-fast-doceval"
+# tokenizer_type="roberta-base-fast-docdev2"
 base_data_dir="../../data/raw_data/"
 preprocessed_data_dir="${base_data_dir}ann_data_${tokenizer_type}_${seq_length}/"
 job_name="OSPass512"
@@ -76,7 +76,7 @@ learning_rate=1e-6
 # model_ann_data_dir="${model_dir}ann_data/"
 
 preprocess_cmd="\
-python ../data/msmarco_data.py --data_dir $base_data_dir --out_data_dir $preprocessed_data_dir --train_model_type $model_type --model_file checkpoint_best.pt  \
+python ../data/msmarco_data_eval.py --data_dir $base_data_dir --out_data_dir $preprocessed_data_dir --train_model_type $model_type --model_file checkpoint_best.pt  \
 --model_name_or_path ../../data/model_temp --max_seq_length $seq_length --data_type $data_type --bpe_vocab_file ../../data/bert-16g-0930/vocab.txt\
 "
 

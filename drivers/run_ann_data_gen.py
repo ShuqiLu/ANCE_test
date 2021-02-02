@@ -441,7 +441,7 @@ def EvalDevQuery(
         prediction[query_id] = {}
 
         top_ann_pid = I_nearest_neighbor[query_idx, :].copy()
-        selected_ann_idx = top_ann_pid[:50]
+        selected_ann_idx = top_ann_pid[:10]
         rank = 0
         seen_pid = set()
         for idx in selected_ann_idx:
@@ -455,7 +455,7 @@ def EvalDevQuery(
 
     # use out of the box evaluation script
     evaluator = pytrec_eval.RelevanceEvaluator(
-        convert_to_string_id(dev_query_positive_id), {'map_cut', 'ndcg_cut'})
+        convert_to_string_id(dev_query_positive_id), {'map_cut', 'ndcg_cut','recip_rank'})
 
     eval_query_cnt = 0
     result = evaluator.evaluate(convert_to_string_id(prediction))
@@ -464,7 +464,8 @@ def EvalDevQuery(
     for k in result.keys():
         eval_query_cnt += 1
         #ndcg += result[k]["ndcg_cut_10"]
-        ndcg += result[k]["map_cut_10"]
+        #ndcg += result[k]["map_cut_10"]
+        ndcg+=result[k]["recip_rank"]
 
     # final_ndcg = ndcg / eval_query_cnt
     # print("Rank:" + str(args.rank) + " --- ANN NDCG@10:" + str(final_ndcg))
