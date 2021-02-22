@@ -176,21 +176,27 @@ def train(args, model, tokenizer, f, train_fn):
     )
     set_seed(args)  # Added here for reproductibility
     #print('???',args.local_rank)
+    #assert 1==0, "?????"
     for m_epoch in train_iterator:
         f.seek(0)
         sds = StreamingDataset(f,train_fn)
         epoch_iterator = DataLoader(sds, batch_size=args.per_gpu_train_batch_size, num_workers=1)
         for step, batch in tqdm(enumerate(epoch_iterator),desc="Iteration",disable=args.local_rank not in [-1,0]):
-
+            #assert 1==0, "?????"
             # Skip past any already trained steps if resuming training
-            if steps_trained_in_current_epoch > 0:
-                steps_trained_in_current_epoch -= 1
-                continue
+            #assert 1==0, steps_trained_in_current_epoch
+            if not args.reset_iter:
+                if steps_trained_in_current_epoch > 0:
+                    steps_trained_in_current_epoch -= 1
+                    continue
 
             model.train()
             batch = tuple(t.to(args.device).long() for t in batch)
+            # print('???',*batch)
+            # assert 1==0, "!!!!!"
 
             if (step + 1) % args.gradient_accumulation_steps == 0:
+                
                 outputs = model(*batch)
             else:
                 with model.no_sync():
@@ -678,6 +684,11 @@ def get_arguments():
         type=str,
         default="triples.train.small.tsv", 
         help="For distant debugging.",
+    )
+    parser.add_argument(
+        "--reset_iter", 
+        action="store_true",
+        help="reset iteration",
     )
 
     args = parser.parse_args()
