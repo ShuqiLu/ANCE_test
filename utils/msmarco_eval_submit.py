@@ -1,8 +1,10 @@
 """
 This is official eval script opensourced on MSMarco site (not written or owned by us)
+
 This module computes evaluation metrics for MSMARCO dataset on the ranking task.
 Command line:
 python msmarco_eval_ranking.py <path_to_reference_file> <path_to_candidate_file>
+
 Creation Date : 06/12/2018
 Last Modified : 1/21/2019
 Authors : Daniel Campos <dacamp@microsoft.com>, Rutger van Haasteren <ruvanh@microsoft.com>
@@ -12,7 +14,7 @@ import statistics
 
 from collections import Counter
 
-MaxMRRRank = 10
+MaxMRRRank = 100
 
 def load_reference_from_stream(f,data_type=1):
     """Load Reference reference relevant passages
@@ -42,7 +44,8 @@ def load_reference_from_stream(f,data_type=1):
                 else:
                     qids_to_relevant_passageids[qid] = []
                 if l[2].startswith('D'):
-                    qids_to_relevant_passageids[qid].append(int(l[2][1:]))
+                    # qids_to_relevant_passageids[qid].append(int(l[2][1:]))
+                    qids_to_relevant_passageids[qid].append(l[2])
                 else:
                     raise IOError('\"%s\" is not valid format' % l)
             except:
@@ -68,7 +71,8 @@ def load_candidate_from_stream(f):
         try:
             l = l.strip().split('\t')
             qid = int(l[0])
-            pid = int(l[1])
+            # pid = int(l[1])
+            pid = l[1]
             rank = int(l[2])
             if qid in qid_to_ranked_candidate_passages:
                 pass    
@@ -93,6 +97,7 @@ def load_candidate(path_to_candidate):
 
 def quality_checks_qids(qids_to_relevant_passageids, qids_to_ranked_candidate_passages):
     """Perform quality checks on the dictionaries
+
     Args:
     p_qids_to_relevant_passageids (dict): dictionary of query-passage mapping
         Dict as read in with load_reference or load_reference_from_stream
@@ -132,17 +137,22 @@ def compute_metrics(qids_to_relevant_passageids, qids_to_ranked_candidate_passag
     MRR = 0
     qids_with_relevant_passages = 0
     ranking = []
+    #w=open('../evaluation/RoBERTa.txt','w')
     for qid in qids_to_ranked_candidate_passages:
         if qid in qids_to_relevant_passageids:
             ranking.append(0)
             target_pid = qids_to_relevant_passageids[qid]
             candidate_pid = qids_to_ranked_candidate_passages[qid]
+            #temp=0
             for i in range(0,MaxMRRRank):
                 if candidate_pid[i] in target_pid:
                     MRR += 1/(i + 1)
+                    #temp=1/(i + 1)
                     ranking.pop()
                     ranking.append(i+1)
                     break
+            #w.write('mrr: '+str(temp)+' qid: '+str(qid)+' '+'\t'.join([str(x) for x in candidate_pid[:MaxMRRRank]])+'\n')
+    #w.close()
     if len(ranking) == 0:
         raise IOError("No matching QIDs found. Are you sure you are scoring the evaluation set?")
     
@@ -168,7 +178,7 @@ def compute_metrics_from_files(path_to_reference, path_to_candidate, perform_che
         dict: dictionary of metrics {'MRR': <MRR Score>}
     """
     
-    qids_to_relevant_passageids = load_reference(path_to_reference)
+    qids_to_relevant_passageids = load_reference(path_to_reference,0)
     qids_to_ranked_candidate_passages = load_candidate(path_to_candidate)
     if perform_checks:
         allowed, message = quality_checks_qids(qids_to_relevant_passageids, qids_to_ranked_candidate_passages)
@@ -181,18 +191,20 @@ def main():
     python msmarco_eval_ranking.py <path_to_reference_file> <path_to_candidate_file>
     """
     print("Eval Started")
-    if len(sys.argv) == 3:
-        path_to_reference = sys.argv[1]
-        path_to_candidate = sys.argv[2]
-        metrics = compute_metrics_from_files(path_to_reference, path_to_candidate)
-        print('#####################')
-        for metric in sorted(metrics):
-            print('{}: {}'.format(metric, metrics[metric]))
-        print('#####################')
+    #if len(sys.argv) == 3:
+    # path_to_reference = sys.argv[1]
+    # path_to_candidate = sys.argv[2]
+    path_to_reference = '/home/dihe/Projects/data/raw_data/msmarco-docdev-qrels.tsv'
+    path_to_candidate = '../evaluation/result2.txt'
+    metrics = compute_metrics_from_files(path_to_reference, path_to_candidate)
+    print('#####################')
+    for metric in sorted(metrics):
+        print('{}: {}'.format(metric, metrics[metric]))
+    print('#####################')
 
-    else:
-        print('Usage: msmarco_eval_ranking.py <reference ranking> <candidate ranking>')
-        exit()
+    # else:
+    #     print('Usage: msmarco_eval_ranking.py <reference ranking> <candidate ranking>')
+    #     exit()
     
 if __name__ == '__main__':
     main()
