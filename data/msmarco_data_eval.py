@@ -219,13 +219,22 @@ def preprocess(args):
         #     "msmarco-docdev-qrels.tsv",
         #     "dev-query",
         #     "dev-qrel.tsv")
+        # write_query_rel(
+        #     args,
+        #     pid2offset,
+        #     "docleaderboard-queries.tsv",
+        #     "",
+        #     "dev-query",
+        #     "dev-qrel.tsv")
+
         write_query_rel(
             args,
             pid2offset,
-            "docleaderboard-queries.tsv",
+            "msmarco-docdev-queries.tsv",
             "",
             "dev-query",
             "dev-qrel.tsv")
+        
     else:
         write_query_rel(
             args,

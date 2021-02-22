@@ -61,6 +61,28 @@ from msmarco_eval import quality_checks_qids, compute_metrics, load_reference
 # raw_data_dir = '/home/dihe/Projects/data/raw_data/'
 # processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-docdev_512'
 
+#-----------------------------------------------------------------------------
+
+exp=sys.argv[1] 
+model_num=sys.argv[2] 
+
+checkpoint =  0 
+data_type = 0 
+test_set = 0 
+checkpoint_path ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/'+str(exp)+'/ann_data'+str(model_num)+'/'
+raw_data_dir = '/home/dihe/Projects/data/raw_data/'
+processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-docdev_512'
+
+
+
+# checkpoint =  0 
+# data_type = 0 
+# test_set = 0 
+# checkpoint_path ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/'+str()+'/ann_data910000/'
+# raw_data_dir = '/home/dihe/Projects/data/raw_data/'
+# processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-docdev2_512'
+
+#-----------------------------------------------------------------------------
 
 # checkpoint =  0 
 # data_type = 1 
@@ -70,12 +92,12 @@ from msmarco_eval import quality_checks_qids, compute_metrics, load_reference
 # processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast_512'
 
 
-checkpoint =  0 
-data_type = 1 
-test_set = 0 
-checkpoint_path ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_02_03_02/ann_data/'
-raw_data_dir = '/home/dihe/Projects/data/raw_data/'
-processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-passsmall5_512'
+# checkpoint =  0 
+# data_type = 1 
+# test_set = 0 
+# checkpoint_path ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_02_03_02/ann_data/'
+# raw_data_dir = '/home/dihe/Projects/data/raw_data/'
+# processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-passsmall5_512'
 
 
 # checkpoint =  0 
@@ -353,46 +375,46 @@ passage_embedding2id = np.concatenate(passage_embedding2id, axis=0)
 
 #reranking
 
-pidmap = collections.defaultdict(list)
-for i in range(len(passage_embedding2id)):
-    pidmap[passage_embedding2id[i]].append(i)  # abs pos(key) to rele pos(val)
+# pidmap = collections.defaultdict(list)
+# for i in range(len(passage_embedding2id)):
+#     pidmap[passage_embedding2id[i]].append(i)  # abs pos(key) to rele pos(val)
     
-rerank_data = {}
-all_dev_I = []
-for i,qid in enumerate(dev_query_embedding2id):
-    p_set = []
-    p_set_map = {}
-    if qid not in bm25:
-        print(qid,"not in bm25")
-    else:
-        count = 0
-        for k,pid in enumerate(bm25[qid]):
-            if pid in pidmap:
-                for val in pidmap[pid]:
-                    p_set.append(passage_embedding[val])
-                    p_set_map[count] = val # new rele pos(key) to old rele pos(val)
-                    count += 1
-            else:
-                print(pid,"not in passages")
-    dim = passage_embedding.shape[1]
-    faiss.omp_set_num_threads(16)
-    cpu_index = faiss.IndexFlatIP(dim)
-    p_set =  np.asarray(p_set)
-    cpu_index.add(p_set)    
-    _, dev_I = cpu_index.search(dev_query_embedding[i:i+1], len(p_set))
-    for j in range(len(dev_I[0])):
-        dev_I[0][j] = p_set_map[dev_I[0][j]]
-    all_dev_I.append(dev_I[0])
-result = EvalDevQuery(dev_query_embedding2id, passage_embedding2id, dev_query_positive_id, all_dev_I, topN)
-final_ndcg, eval_query_cnt, final_Map, final_mrr, final_recall, hole_rate, ms_mrr, Ahole_rate, metrics, prediction = result
-print("Reranking Results for checkpoint "+str(checkpoint))
-print("Reranking NDCG@10:" + str(final_ndcg))
-print("Reranking map@10:" + str(final_Map))
-print("Reranking pytrec_mrr:" + str(final_mrr))
-print("Reranking recall@"+str(topN)+":" + str(final_recall))
-print("Reranking hole rate@10:" + str(hole_rate))
-print("Reranking hole rate:" + str(Ahole_rate))
-print("Reranking ms_mrr:" + str(ms_mrr))
+# rerank_data = {}
+# all_dev_I = []
+# for i,qid in enumerate(dev_query_embedding2id):
+#     p_set = []
+#     p_set_map = {}
+#     if qid not in bm25:
+#         print(qid,"not in bm25")
+#     else:
+#         count = 0
+#         for k,pid in enumerate(bm25[qid]):
+#             if pid in pidmap:
+#                 for val in pidmap[pid]:
+#                     p_set.append(passage_embedding[val])
+#                     p_set_map[count] = val # new rele pos(key) to old rele pos(val)
+#                     count += 1
+#             else:
+#                 print(pid,"not in passages")
+#     dim = passage_embedding.shape[1]
+#     faiss.omp_set_num_threads(16)
+#     cpu_index = faiss.IndexFlatIP(dim)
+#     p_set =  np.asarray(p_set)
+#     cpu_index.add(p_set)    
+#     _, dev_I = cpu_index.search(dev_query_embedding[i:i+1], len(p_set))
+#     for j in range(len(dev_I[0])):
+#         dev_I[0][j] = p_set_map[dev_I[0][j]]
+#     all_dev_I.append(dev_I[0])
+# result = EvalDevQuery(dev_query_embedding2id, passage_embedding2id, dev_query_positive_id, all_dev_I, topN)
+# final_ndcg, eval_query_cnt, final_Map, final_mrr, final_recall, hole_rate, ms_mrr, Ahole_rate, metrics, prediction = result
+# print("Reranking Results for checkpoint "+str(checkpoint))
+# print("Reranking NDCG@10:" + str(final_ndcg))
+# print("Reranking map@10:" + str(final_Map))
+# print("Reranking pytrec_mrr:" + str(final_mrr))
+# print("Reranking recall@"+str(topN)+":" + str(final_recall))
+# print("Reranking hole rate@10:" + str(hole_rate))
+# print("Reranking hole rate:" + str(Ahole_rate))
+# print("Reranking ms_mrr:" + str(ms_mrr))
 
 
 #full ranking

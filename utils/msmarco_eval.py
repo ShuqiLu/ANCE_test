@@ -14,7 +14,7 @@ import statistics
 
 from collections import Counter
 
-MaxMRRRank = 10
+MaxMRRRank = 100
 
 def load_reference_from_stream(f,data_type=1):
     """Load Reference reference relevant passages
@@ -44,7 +44,8 @@ def load_reference_from_stream(f,data_type=1):
                 else:
                     qids_to_relevant_passageids[qid] = []
                 if l[2].startswith('D'):
-                    qids_to_relevant_passageids[qid].append(int(l[2][1:]))
+                    # qids_to_relevant_passageids[qid].append(int(l[2][1:]))
+                    qids_to_relevant_passageids[qid].append(l[2])
                 else:
                     raise IOError('\"%s\" is not valid format' % l)
             except:
@@ -70,7 +71,8 @@ def load_candidate_from_stream(f):
         try:
             l = l.strip().split('\t')
             qid = int(l[0])
-            pid = int(l[1])
+            # pid = int(l[1])
+            pid = l[1]
             rank = int(l[2])
             if qid in qid_to_ranked_candidate_passages:
                 pass    
@@ -176,7 +178,7 @@ def compute_metrics_from_files(path_to_reference, path_to_candidate, perform_che
         dict: dictionary of metrics {'MRR': <MRR Score>}
     """
     
-    qids_to_relevant_passageids = load_reference(path_to_reference)
+    qids_to_relevant_passageids = load_reference(path_to_reference,0)
     qids_to_ranked_candidate_passages = load_candidate(path_to_candidate)
     if perform_checks:
         allowed, message = quality_checks_qids(qids_to_relevant_passageids, qids_to_ranked_candidate_passages)
@@ -189,18 +191,20 @@ def main():
     python msmarco_eval_ranking.py <path_to_reference_file> <path_to_candidate_file>
     """
     print("Eval Started")
-    if len(sys.argv) == 3:
-        path_to_reference = sys.argv[1]
-        path_to_candidate = sys.argv[2]
-        metrics = compute_metrics_from_files(path_to_reference, path_to_candidate)
-        print('#####################')
-        for metric in sorted(metrics):
-            print('{}: {}'.format(metric, metrics[metric]))
-        print('#####################')
+    #if len(sys.argv) == 3:
+    # path_to_reference = sys.argv[1]
+    # path_to_candidate = sys.argv[2]
+    path_to_reference = '/home/dihe/Projects/data/raw_data/msmarco-docdev-qrels.tsv'
+    path_to_candidate = '../evaluation/result2.txt'
+    metrics = compute_metrics_from_files(path_to_reference, path_to_candidate)
+    print('#####################')
+    for metric in sorted(metrics):
+        print('{}: {}'.format(metric, metrics[metric]))
+    print('#####################')
 
-    else:
-        print('Usage: msmarco_eval_ranking.py <reference ranking> <candidate ranking>')
-        exit()
+    # else:
+    #     print('Usage: msmarco_eval_ranking.py <reference ranking> <candidate ranking>')
+    #     exit()
     
 if __name__ == '__main__':
     main()

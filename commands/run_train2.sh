@@ -24,7 +24,7 @@
 gpu_no=4
 seq_length=512
 model_type=rdot_nll_fairseq_fast
-tokenizer_type="roberta-base-fast-doceval"
+tokenizer_type="roberta-base-fast-doceval_dev"
 # tokenizer_type="roberta-base-fast-docdev2"
 base_data_dir="../../data/raw_data/"
 preprocessed_data_dir="${base_data_dir}ann_data_${tokenizer_type}_${seq_length}/"
