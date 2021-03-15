@@ -433,7 +433,7 @@ class RobertaDot_NLL_LN_fairseq_fast_sentence(NLL,nn.Module):
                 attention_dropout=0.1,
                 activation_dropout=0.0,
                 layerdrop=0.0,
-                max_seq_len=288,
+                max_seq_len=512,
                 num_segments=0,
                 encoder_normalize_before=True,
                 apply_bert_init=True,
