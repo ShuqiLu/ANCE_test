@@ -99,14 +99,39 @@ class NLL(EmbeddingMixin):
 
         #print('???',q_embs.shape,a_embs.shape)
 
-        logit_matrix = torch.cat([(q_embs * a_embs).sum(-1).unsqueeze(1),
-                                  (q_embs * b_embs).sum(-1).unsqueeze(1)], dim=1)  # [B, 2]
+        # logit_matrix = torch.cat([(q_embs * a_embs).sum(-1).unsqueeze(1),
+        #                           (q_embs * b_embs).sum(-1).unsqueeze(1)], dim=1)  # [B, 2]
+        #print('???',torch.cosine_similarity(q_embs,a_embs),torch.cosine_similarity(q_embs,a_embs).shape)
+        logit_matrix = torch.cat([torch.cosine_similarity(q_embs,a_embs).unsqueeze(1), 
+                                  torch.cosine_similarity(q_embs,b_embs).unsqueeze(1)], dim=1)
+
         #print('???',logit_matrix.shape,logit_matrix)
         lsm = F.log_softmax(logit_matrix, dim=1)
         #print('???',lsm)
         #assert 1==0
         loss = -1.0 * lsm[:, 0]
         return (loss.mean(),)
+
+        #q_embs_norm_avg=torch.sum(torch.norm(q_embs,dim=1))/q_embs.shape[0]
+        # a_embs_norm_avg=torch.sum(torch.norm(a_embs,dim=1))/a_embs.shape[0]
+        # b_embs_norm_avg=torch.sum(torch.norm(b_embs,dim=1))/b_embs.shape[0]
+        # cls_norm=(a_embs_norm_avg+b_embs_norm_avg)/2
+        # # print('???',torch.norm(q_embs,dim=1),torch.norm(a_embs,dim=1),torch.norm(b_embs,dim=1))
+        # # #print("???",query_ids,input_ids_a,input_ids_b)
+        # return (loss.mean(),cls_norm)
+
+        
+        # cls_sim=torch.sum(torch.cosine_similarity(a_embs, b_embs, dim=1))/b_embs.shape[0]
+        #cls_sim=torch.sum(torch.cosine_similarity(a_embs, b_embs, dim=1))/b_embs.shape[0]
+        #print("???",F.mse_loss(a_embs, b_embs))
+        #cls_sim=torch.sum(F.mse_loss(a_embs, b_embs,reduction='none').sum(1))/b_embs.shape[0]
+        # cls_simb=torch.sum(torch.cosine_similarity(q_embs, b_embs, dim=1))/b_embs.shape[0]
+        # cls_sima=torch.sum(torch.cosine_similarity(q_embs, a_embs, dim=1))/b_embs.shape[0]
+        # cls_sima=(q_embs * a_embs).sum(-1)
+        # cls_simb=(q_embs * b_embs).sum(-1)
+        #cls_sim= torch.sum((b_embs * a_embs).sum(-1))/b_embs.shape[0]
+        # print('cls_sima',cls_sima,'cls_simb',cls_simb)
+        #return (loss.mean(),cls_sim)
 
 class NLL_concat(EmbeddingMixin):
     def forward(
@@ -561,6 +586,7 @@ class RobertaDot_NLL_LN_fairseq_fast(NLL,nn.Module):
             #         print('???',item)
             assert len(model_dict)-4==len(pretrained_dict), (len(model_dict),len(pretrained_dict),model_dict.keys(),pretrained_dict.keys())
         else:
+            print('load finetuned checkpoints...')
             for name in save_model:
                 pretrained_dict[name[7:]]=save_model[name]
             assert len(model_dict)==len(pretrained_dict)
