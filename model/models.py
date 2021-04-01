@@ -102,6 +102,9 @@ class NLL(EmbeddingMixin):
         # logit_matrix = torch.cat([(q_embs * a_embs).sum(-1).unsqueeze(1),
         #                           (q_embs * b_embs).sum(-1).unsqueeze(1)], dim=1)  # [B, 2]
         #print('???',torch.cosine_similarity(q_embs,a_embs),torch.cosine_similarity(q_embs,a_embs).shape)
+
+
+
         logit_matrix = torch.cat([torch.cosine_similarity(q_embs,a_embs).unsqueeze(1), 
                                   torch.cosine_similarity(q_embs,b_embs).unsqueeze(1)], dim=1)
 
@@ -205,8 +208,9 @@ class RobertaDot_NLL_LN_fairseq_fast_concat(NLL_concat,nn.Module):
         outputs1=outputs1[-1].transpose(0,1)
         full_emb = self.masked_mean_or_first(outputs1, attention_mask)
         query1 = self.embeddingHead(full_emb)
-        # query_norm=torch.norm(full_emb,dim=1).unsqueeze(-1)
-        # query1=full_emb/query_norm
+        
+        query_norm=torch.norm(full_emb,dim=1).unsqueeze(-1)
+        query1=full_emb/query_norm
         return query1
 
     def body_emb(self, input_ids, attention_mask):

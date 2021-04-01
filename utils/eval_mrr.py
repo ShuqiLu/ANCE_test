@@ -119,8 +119,10 @@ def get_topk_restricted(q_emb, psg_emb_arr, pid_dict, psg_ids, pid_subset, top_k
         return _D, _I
     else:
         sub_emb = psg_emb_arr[subset_ix]
+        # _D, _I = search_knn(q_emb, sub_emb, top_k,
+        #                     distance_type=faiss.METRIC_INNER_PRODUCT)
         _D, _I = search_knn(q_emb, sub_emb, top_k,
-                            distance_type=faiss.METRIC_INNER_PRODUCT)
+                            distance_type=faiss.METRIC_L2)
         return _D.squeeze(), psg_ids[subset_ix[_I]].squeeze()  # (top_k,)
 
 
@@ -322,8 +324,10 @@ def combined_dist_eval(args, model, queries_path, passage_path, query_fn, psg_fn
     print(psg_embs.shape)
 
     top_k = 100
+    # D, I = search_knn(query_embs, psg_embs, top_k,
+    #                   distance_type=faiss.METRIC_INNER_PRODUCT)
     D, I = search_knn(query_embs, psg_embs, top_k,
-                      distance_type=faiss.METRIC_INNER_PRODUCT)
+                      distance_type=faiss.METRIC_L2)
     I = psg_ids[I]
 
     # compute reranking and full ranking mrr here
