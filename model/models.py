@@ -99,14 +99,14 @@ class NLL(EmbeddingMixin):
 
         #print('???',q_embs.shape,a_embs.shape)
 
-        # logit_matrix = torch.cat([(q_embs * a_embs).sum(-1).unsqueeze(1),
-        #                           (q_embs * b_embs).sum(-1).unsqueeze(1)], dim=1)  # [B, 2]
+        logit_matrix = torch.cat([(q_embs * a_embs).sum(-1).unsqueeze(1),
+                                  (q_embs * b_embs).sum(-1).unsqueeze(1)], dim=1)  # [B, 2]
         #print('???',torch.cosine_similarity(q_embs,a_embs),torch.cosine_similarity(q_embs,a_embs).shape)
 
 
 
-        logit_matrix = torch.cat([torch.cosine_similarity(q_embs,a_embs).unsqueeze(1), 
-                                  torch.cosine_similarity(q_embs,b_embs).unsqueeze(1)], dim=1)
+        # logit_matrix = torch.cat([torch.cosine_similarity(q_embs,a_embs).unsqueeze(1), 
+        #                           torch.cosine_similarity(q_embs,b_embs).unsqueeze(1)], dim=1)
 
         #print('???',logit_matrix.shape,logit_matrix)
         lsm = F.log_softmax(logit_matrix, dim=1)
