@@ -560,8 +560,8 @@ class RobertaDot_NLL_LN_fairseq_fast(NLL,nn.Module):
         full_emb = self.masked_mean_or_first(outputs1, attention_mask)
         query1 = self.norm(self.embeddingHead(full_emb))
 
-        query_norm=torch.norm(full_emb,dim=1).unsqueeze(-1)
-        query1=full_emb/query_norm
+        query_norm=torch.norm(query1,dim=1).unsqueeze(-1)
+        query1=query1/query_norm
         return query1
 
     def body_emb(self, input_ids, attention_mask):
