@@ -19,12 +19,12 @@ from transformers import (
 import torch.nn.functional as F
 from data.process_fn import triple_process_fn, triple2dual_process_fn
 
-from fairseq.modules import (
-    LayerNorm,
-    MultiheadAttention,
-    PositionalEmbedding,
-    TransformerSentenceEncoderLayer,
-)
+# from fairseq.modules import (
+#     LayerNorm,
+#     MultiheadAttention,
+#     PositionalEmbedding,
+#     TransformerSentenceEncoderLayer,
+# )
 from fairseq.modules import (
     TransformerSentenceEncoder,
 )
@@ -99,8 +99,8 @@ class NLL(EmbeddingMixin):
 
         #print('???',q_embs.shape,a_embs.shape)
 
-        logit_matrix = torch.cat([(q_embs * a_embs).sum(-1).unsqueeze(1),
-                                  (q_embs * b_embs).sum(-1).unsqueeze(1)], dim=1)  # [B, 2]
+        # logit_matrix = torch.cat([(q_embs * a_embs).sum(-1).unsqueeze(1),
+        #                           (q_embs * b_embs).sum(-1).unsqueeze(1)], dim=1)  # [B, 2]
         #print('???',torch.cosine_similarity(q_embs,a_embs),torch.cosine_similarity(q_embs,a_embs).shape)
 
 
@@ -109,10 +109,17 @@ class NLL(EmbeddingMixin):
         #                           torch.cosine_similarity(q_embs,b_embs).unsqueeze(1)], dim=1)
 
         #print('???',logit_matrix.shape,logit_matrix)
-        lsm = F.log_softmax(logit_matrix, dim=1)
-        #print('???',lsm)
-        #assert 1==0
-        loss = -1.0 * lsm[:, 0]
+        # lsm = F.log_softmax(logit_matrix, dim=1)
+        # #print('???',lsm)
+        # #assert 1==0
+        # loss = -1.0 * lsm[:, 0]
+
+
+        score_a=(q_embs * a_embs).sum(-1)#.unsqueeze(1)
+        score_b=(q_embs * b_embs).sum(-1)#.unsqueeze(1)
+        target=torch.ones(score_a.shape).type_as(score_a)
+
+        loss=torch.nn.MarginRankingLoss(margin=1.0)(score_a,score_b,target)
         return (loss.mean(),)
 
         #q_embs_norm_avg=torch.sum(torch.norm(q_embs,dim=1))/q_embs.shape[0]
