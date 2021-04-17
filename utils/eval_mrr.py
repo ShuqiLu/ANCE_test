@@ -159,17 +159,22 @@ def passage_dist_eval_last(args, model, tokenizer):
 
 
 
-    query_positive_id_path = os.path.join(base_path, "dev-qrel.tsv")
-    dev_query_positive_id = {}
+    # query_positive_id_path = os.path.join(base_path, "dev-qrel.tsv")
+    # dev_query_positive_id = {}
 
-    with open(query_positive_id_path, 'r', encoding='utf8') as f:
-        tsvreader = csv.reader(f, delimiter="\t")
-        for [topicid, docid, rel] in tsvreader:
-            topicid = int(topicid)
-            docid = int(docid)
-            if topicid not in dev_query_positive_id:
-                dev_query_positive_id[topicid] = {}
-            dev_query_positive_id[topicid][docid] = int(rel)
+    # with open(query_positive_id_path, 'r', encoding='utf8') as f:
+    #     tsvreader = csv.reader(f, delimiter="\t")
+    #     for [topicid, docid, rel] in tsvreader:
+    #         topicid = int(topicid)
+    #         docid = int(docid)
+    #         if topicid not in dev_query_positive_id:
+    #             dev_query_positive_id[topicid] = {}
+    #         dev_query_positive_id[topicid][docid] = int(rel)
+    dev_query_positive_id = {}
+    for item in ref_dict:
+        if item not in dev_query_positive_id:
+            dev_query_positive_id[item]={}
+        dev_query_positive_id[item][ref_dict[item]]=1
 
     recall_1000 = combined_dist_eval_last(
         args, model, queries_path, passage_path, fn, fn, top1k_qid_pid, ref_dict,dev_query_positive_id)

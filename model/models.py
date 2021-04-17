@@ -99,8 +99,8 @@ class NLL(EmbeddingMixin):
 
         #print('???',q_embs.shape,a_embs.shape)
 
-        # logit_matrix = torch.cat([(q_embs * a_embs).sum(-1).unsqueeze(1),
-        #                           (q_embs * b_embs).sum(-1).unsqueeze(1)], dim=1)  # [B, 2]
+        logit_matrix = torch.cat([(q_embs * a_embs).sum(-1).unsqueeze(1),
+                                  (q_embs * b_embs).sum(-1).unsqueeze(1)], dim=1)  # [B, 2]
         #print('???',torch.cosine_similarity(q_embs,a_embs),torch.cosine_similarity(q_embs,a_embs).shape)
 
 
@@ -109,18 +109,18 @@ class NLL(EmbeddingMixin):
         #                           torch.cosine_similarity(q_embs,b_embs).unsqueeze(1)], dim=1)
 
         #print('???',logit_matrix.shape,logit_matrix)
-        # lsm = F.log_softmax(logit_matrix, dim=1)
+        lsm = F.log_softmax(logit_matrix, dim=1)
         # #print('???',lsm)
-        # #assert 1==0
-        # loss = -1.0 * lsm[:, 0]
+        #assert 1==0
+        loss = -1.0 * lsm[:, 0]
 
 
-        score_a=(q_embs * a_embs).sum(-1)#.unsqueeze(1)
-        score_b=(q_embs * b_embs).sum(-1)#.unsqueeze(1)
-        target=torch.ones(score_a.shape).type_as(score_a)
+        # score_a=(q_embs * a_embs).sum(-1)#.unsqueeze(1)
+        # score_b=(q_embs * b_embs).sum(-1)#.unsqueeze(1)
+        # target=torch.ones(score_a.shape).type_as(score_a)
 
-        loss=torch.nn.MarginRankingLoss(margin=1.0)(score_a,score_b,target)
-        return (loss.mean(),)
+        # loss=torch.nn.MarginRankingLoss(margin=1.0)(score_a,score_b,target)
+        # return (loss.mean(),)
 
         #q_embs_norm_avg=torch.sum(torch.norm(q_embs,dim=1))/q_embs.shape[0]
         # a_embs_norm_avg=torch.sum(torch.norm(a_embs,dim=1))/a_embs.shape[0]
@@ -567,8 +567,8 @@ class RobertaDot_NLL_LN_fairseq_fast(NLL,nn.Module):
         full_emb = self.masked_mean_or_first(outputs1, attention_mask)
         query1 = self.norm(self.embeddingHead(full_emb))
 
-        query_norm=torch.norm(query1,dim=1).unsqueeze(-1)
-        query1=query1/query_norm
+        # query_norm=torch.norm(query1,dim=1).unsqueeze(-1)
+        # query1=query1/query_norm
         return query1
 
     def body_emb(self, input_ids, attention_mask):

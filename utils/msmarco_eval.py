@@ -133,6 +133,8 @@ def compute_metrics(qids_to_relevant_passageids, qids_to_ranked_candidate_passag
     qids_with_relevant_passages = 0
     ranking = []
     for qid in qids_to_ranked_candidate_passages:
+        #print('start???')
+        #assert qid in qids_to_relevant_passageids
         if qid in qids_to_relevant_passageids:
             ranking.append(0)
             target_pid = qids_to_relevant_passageids[qid]
@@ -142,7 +144,47 @@ def compute_metrics(qids_to_relevant_passageids, qids_to_ranked_candidate_passag
                     MRR += 1/(i + 1)
                     ranking.pop()
                     ranking.append(i+1)
+                    #print("????",target_pid,candidate_pid,i)
                     break
+    if len(ranking) == 0:
+        raise IOError("No matching QIDs found. Are you sure you are scoring the evaluation set?")
+    #print('???',MRR,len(qids_to_relevant_passageids))
+    MRR = MRR/len(qids_to_relevant_passageids)
+    all_scores['MRR @'+str(MaxMRRRank)] = MRR
+    all_scores['QueriesRanked'] = len(qids_to_ranked_candidate_passages)
+    return all_scores
+
+
+def compute_metrics_case(qids_to_relevant_passageids, qids_to_ranked_candidate_passages,MaxMRRRank=MaxMRRRank):
+    """Compute MRR metric
+    Args:    
+    p_qids_to_relevant_passageids (dict): dictionary of query-passage mapping
+        Dict as read in with load_reference or load_reference_from_stream
+    p_qids_to_ranked_candidate_passages (dict): dictionary of query-passage candidates
+    Returns:
+        dict: dictionary of metrics {'MRR': <MRR Score>}
+    """
+    all_scores = {}
+    MRR = 0
+    qids_with_relevant_passages = 0
+    ranking = []
+    #w=open('../evaluation/RoBERTa.txt','w')
+    for qid in qids_to_ranked_candidate_passages:
+
+        if qid in qids_to_relevant_passageids:
+            ranking.append(0)
+            target_pid = qids_to_relevant_passageids[qid]
+            candidate_pid = qids_to_ranked_candidate_passages[qid]
+            #temp=0
+            for i in range(0,MaxMRRRank):
+                if candidate_pid[i] in target_pid:
+                    MRR += 1/(i + 1)
+                    ranking.pop()
+                    ranking.append(i+1)
+                    
+                    break
+            #w.write('mrr: '+str(temp)+' qid: '+str(qid)+' '+'\t'.join([str(x) for x in candidate_pid[:MaxMRRRank]])+'\n')
+    #w.close()
     if len(ranking) == 0:
         raise IOError("No matching QIDs found. Are you sure you are scoring the evaluation set?")
     
@@ -150,6 +192,9 @@ def compute_metrics(qids_to_relevant_passageids, qids_to_ranked_candidate_passag
     all_scores['MRR @'+str(MaxMRRRank)] = MRR
     all_scores['QueriesRanked'] = len(qids_to_ranked_candidate_passages)
     return all_scores
+
+
+
                 
 def compute_metrics_from_files(path_to_reference, path_to_candidate, perform_checks=True):
     """Compute MRR metric

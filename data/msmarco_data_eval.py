@@ -227,10 +227,17 @@ def preprocess(args):
         #     "dev-query",
         #     "dev-qrel.tsv")
 
+        # write_query_rel(
+        #     args,
+        #     pid2offset,
+        #     "msmarco-docdev-queries.tsv",
+        #     "",
+        #     "dev-query",
+        #     "dev-qrel.tsv")
         write_query_rel(
             args,
             pid2offset,
-            "msmarco-docdev-queries.tsv",
+            "msmarco-doctrain-queries-small.tsv",
             "",
             "dev-query",
             "dev-qrel.tsv")

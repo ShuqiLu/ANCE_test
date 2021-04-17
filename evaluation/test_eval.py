@@ -54,6 +54,21 @@ from msmarco_eval import quality_checks_qids, compute_metrics, load_reference
 # raw_data_dir = '/home/dihe/Projects/data/raw_data/'
 # processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-docdev_512'
 
+# checkpoint =  0 
+# data_type = 0 
+# test_set = 1 
+# checkpoint_path ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_01_05_09/ann_data820000/'
+# raw_data_dir = '/home/dihe/Projects/data/raw_data/'
+# processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-docdev2_512'
+# # processed_data_dir2 = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-docdev2_512'
+# # checkpoint_path2 ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_01_05_09/ann_data820000/'
+
+# processed_data_dir2 = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-doceval_512'
+# checkpoint_path2 ='/home/dihe/Projects/data/raw_data/eval_exp_01_05_09_820000/ann_data/'
+# query_emb_num=4
+
+
+
 checkpoint =  0 
 data_type = 0 
 test_set = 1 
@@ -66,6 +81,7 @@ processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fa
 processed_data_dir2 = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-doceval_512'
 checkpoint_path2 ='/home/dihe/Projects/data/raw_data/eval_exp_01_05_09_820000/ann_data/'
 query_emb_num=4
+
 
 # processed_data_dir2 = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-doceval_dev_512'
 # checkpoint_path2 ='/home/dihe/Projects/data/raw_data/eval_exp_01_05_09_820000_dev/ann_data/'
