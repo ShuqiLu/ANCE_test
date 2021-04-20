@@ -121,6 +121,7 @@ def load_model(args, checkpoint_path):
     saved_state = load_states_from_checkpoint(checkpoint_path)
     model_to_load = get_model_obj(model)
     logger.info('Loading saved model state ...')
+    print('???model param',saved_state.model_dict.keys())
     model_to_load.load_state_dict(saved_state.model_dict)
 
     model.to(args.device)
@@ -204,7 +205,9 @@ def StreamInferenceDoc(args, model, fn, prefix, f, is_query_inference = True, lo
 def generate_new_ann(args, output_num, checkpoint_path, preloaded_data, latest_step_num):
 
     model = load_model(args, checkpoint_path)
+    #print('ok1???')
     pid2offset, offset2pid = load_mapping(args.data_dir, "pid2offset")
+    #print('ok2???')
 
     logger.info("***** inference of train query *****")
     train_query_collection_path = os.path.join(args.data_dir, "train-query")
@@ -550,6 +553,7 @@ def ann_data_gen(args):
             latest_step_num = 0
 
         if next_checkpoint == last_checkpoint:
+            print('sleep...')
             time.sleep(60)
         else:
             logger.info("start generate ann data number %d", output_num)

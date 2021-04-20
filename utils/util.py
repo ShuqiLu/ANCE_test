@@ -330,10 +330,10 @@ class StreamingDataset(IterableDataset):
 
 def tokenize_to_file(args, i, num_process, in_path, out_path, line_fn):
 
-    configObj = MSMarcoConfigDict[args.train_model_type]
-    if 'fast' in args.train_model_type:
+    configObj = MSMarcoConfigDict[args.model_type]
+    if 'fast' in args.model_type:
         tokenizer = BertWordPieceTokenizer(args.bpe_vocab_file, clean_text=False, strip_accents=False, lowercase=False)
-    elif 'fairseq' in args.train_model_type:
+    elif 'fairseq' in args.model_type:
         #tokenizer=configObj.tokenizer_class.from_pretrained(args.model_name_or_path,checkpoint_file='model.pt')
         tokenizer=torch.hub.load('pytorch/fairseq', 'roberta.base')
     else:
@@ -342,13 +342,14 @@ def tokenize_to_file(args, i, num_process, in_path, out_path, line_fn):
             do_lower_case=True,
             cache_dir=None,
         )
-
+    #print('???',in_path,out_path)
     with open(in_path, 'r', encoding='utf-8') if in_path[-2:] != "gz" else gzip.open(in_path, 'rt', encoding='utf8') as in_f,\
             open('{}_split{}'.format(out_path, i), 'wb') as out_f:
         for idx, line in enumerate(in_f):
             if idx % num_process != i:
                 continue
             out_f.write(line_fn(args, line, tokenizer))
+            #print('!!!')
 
 
 def multi_file_process(args, num_process, in_path, out_path, line_fn):

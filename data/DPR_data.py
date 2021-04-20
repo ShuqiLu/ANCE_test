@@ -12,7 +12,7 @@ from model.models import MSMarcoConfigDict, ALL_MODELS
 import csv
 from utils.util import multi_file_process, numbered_byte_file_generator, EmbeddingCache
 import pickle
-
+from tokenizers import BertWordPieceTokenizer, normalizers, pre_tokenizers
 
 def normalize_question(question: str) -> str:
     if question[-1] == '?':
@@ -33,11 +33,14 @@ def write_qas_query(args, qas_file, out_query_file):
     )
 
     configObj = MSMarcoConfigDict[args.model_type]
-    tokenizer = configObj.tokenizer_class.from_pretrained(
-        args.model_name_or_path,
-        do_lower_case=True,
-        cache_dir=None,
-    )
+    if 'fast' in args.model_type:
+        tokenizer = BertWordPieceTokenizer(args.bpe_vocab_file, clean_text=False, strip_accents=False, lowercase=False)
+    else:
+        tokenizer = configObj.tokenizer_class.from_pretrained(
+            args.model_name_or_path,
+            do_lower_case=True,
+            cache_dir=None,
+        )
 
     qid = 0
     with open(qas_path, "r", encoding="utf-8") as f, open(out_query_path, "wb") as out_query:
@@ -88,11 +91,20 @@ def write_query_rel(args, pid2offset, query_file, out_query_file, out_ann_file, 
     qid = 0
 
     configObj = MSMarcoConfigDict[args.model_type]
-    tokenizer = configObj.tokenizer_class.from_pretrained(
-        args.model_name_or_path,
-        do_lower_case=True,
-        cache_dir=None,
-    )
+
+    # tokenizer = configObj.tokenizer_class.from_pretrained(
+    #     args.model_name_or_path,
+    #     do_lower_case=True,
+    #     cache_dir=None,
+    # )
+    if 'fast' in args.model_type:
+        tokenizer = BertWordPieceTokenizer(args.bpe_vocab_file, clean_text=False, strip_accents=False, lowercase=False)
+    else:
+        tokenizer = configObj.tokenizer_class.from_pretrained(
+            args.model_name_or_path,
+            do_lower_case=True,
+            cache_dir=None,
+        )
 
     with open(out_query_path, "wb") as out_query, \
             open(out_ann_file, "w", encoding='utf-8') as out_ann, \
@@ -234,18 +246,32 @@ def PassagePreprocessingFn(args, line, tokenizer):
     p_id = int(line_arr[0])
     text = line_arr[1]
     title = line_arr[2]
-
-    token_ids = tokenizer.encode(title, text_pair=text, add_special_tokens=True,
-                                      max_length=args.max_seq_length,
-                                      pad_to_max_length=False)
+    if 'fast' in args.model_type:
+        #print('???')
+        text=title.lower()+"[SEP][SEP]"+text.lower()
+        token_ids = tokenizer.encode(
+            text,
+            add_special_tokens=True,
+        ).ids[:args.max_seq_length]
+    else:
+        token_ids = tokenizer.encode(title, text_pair=text, add_special_tokens=True,
+                                          max_length=args.max_seq_length,
+                                          pad_to_max_length=False)
 
     seq_len = args.max_seq_length
     passage_len = len(token_ids)
     if len(token_ids) < seq_len:
-        token_ids = token_ids + [tokenizer.pad_token_id] * (seq_len - len(token_ids))
+        if 'fast' in args.model_type:
+            token_ids = token_ids + [1] * (seq_len - len(token_ids))
+        else:
+            token_ids = token_ids + [tokenizer.pad_token_id] * (seq_len - len(token_ids))
+        
     if len(token_ids) > seq_len:
         token_ids = token_ids[0:seq_len]
-        token_ids[-1] = tokenizer.sep_token_id
+        if 'fast' in args.model_type:
+            token_ids[-1] = 2
+        else:
+            token_ids[-1] = tokenizer.sep_token_id
 
     if p_id < 5:
         a = np.array(token_ids, np.int32)
@@ -255,16 +281,33 @@ def PassagePreprocessingFn(args, line, tokenizer):
 
 
 def QueryPreprocessingFn(args, qid, text, tokenizer):
-    token_ids = tokenizer.encode(text, add_special_tokens=True, max_length=args.max_seq_length,
-                                       pad_to_max_length=False)
+
+    if 'fast' in args.model_type:
+        text=text.lower()
+        token_ids = tokenizer.encode(
+            text,
+            add_special_tokens=True,
+        ).ids[:args.max_seq_length]
+    else:
+        token_ids = tokenizer.encode(text, add_special_tokens=True, max_length=args.max_seq_length,
+                                           pad_to_max_length=False)
 
     seq_len = args.max_seq_length
     passage_len = len(token_ids)
     if len(token_ids) < seq_len:
-        token_ids = token_ids + [tokenizer.pad_token_id] * (seq_len - len(token_ids))
+        #token_ids = token_ids + [tokenizer.pad_token_id] * (seq_len - len(token_ids))
+        if 'fast' in args.model_type:
+            token_ids = token_ids + [1] * (seq_len - len(token_ids))
+        else:
+            token_ids = token_ids + [tokenizer.pad_token_id] * (seq_len - len(token_ids))
+
     if len(token_ids) > seq_len:
         token_ids = token_ids[0:seq_len]
-        token_ids[-1] = tokenizer.sep_token_id
+        #token_ids[-1] = tokenizer.sep_token_id
+        if 'fast' in args.model_type:
+            token_ids[-1] = 2
+        else:
+            token_ids[-1] = tokenizer.sep_token_id
 
     if qid < 5:
         a = np.array(token_ids, np.int32)
@@ -390,6 +433,11 @@ def main():
     )
     parser.add_argument(
         "--answer_dir",
+        type=str,
+        help="location of the QnA answers for evaluation",
+    )
+    parser.add_argument(
+        "--bpe_vocab_file",
         type=str,
         help="location of the QnA answers for evaluation",
     )
