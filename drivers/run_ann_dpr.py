@@ -100,7 +100,7 @@ def train(args, model, query_cache, passage_cache):
     model.train()
     set_seed(args)  # Added here for reproductibility
 
-    last_ann_no = -1
+    last_ann_no = -2
     train_dataloader = None
     train_dataloader_iter = None
     dev_ndcg = 0
@@ -118,6 +118,9 @@ def train(args, model, query_cache, passage_cache):
         logger.info("  Continuing training from checkpoint, will skip to saved global_step")
         logger.info("  Continuing training from global step %d", global_step)
 
+        if global_step%args.logging_steps!=0:
+            global_step=0
+
 
         nq_dev_nll_loss, nq_correct_ratio = evaluate_dev(args, model, passage_cache)
         dev_nll_loss_trivia, correct_ratio_trivia = evaluate_dev(args, model, passage_cache, "-trivia")
@@ -129,13 +132,18 @@ def train(args, model, query_cache, passage_cache):
 
     while global_step < args.max_steps:
 
+        #print('???',step,args.gradient_accumulation_steps,global_step,args.logging_steps)
+
         if step % args.gradient_accumulation_steps == 0 and global_step % args.logging_steps == 0:
 
             if args.num_epoch == 0:
                 # check if new ann training data is availabe
                 ann_no, ann_path, ndcg_json = get_latest_ann_data(args.ann_dir)
+                # print('???',ann_path)
+                # assert 1==0
                 if ann_path is None:
                     ann_no, ann_path, ndcg_json = get_latest_ann_data(args.blob_ann_dir)
+                    print('???',args.blob_ann_dir,ann_path,last_ann_no)
                     ann_no=-1
                 if ann_path is not None and ann_no != last_ann_no:
                     logger.info("Training on new add data at %s", ann_path)
@@ -659,8 +667,8 @@ def load_model(args):
         if not os.path.exists(args.output_dir):
             os.makedirs(args.output_dir)
             
-        if not os.path.exists(blob_output_dir):
-            os.makedirs(blob_output_dir)
+        if not os.path.exists(args.blob_output_dir):
+            os.makedirs(args.blob_output_dir)
 
     model = configObj.model_class(args)
 
