@@ -104,7 +104,7 @@ def load_model(args, checkpoint_path):
     label_list = ["0", "1"]
     num_labels = len(label_list)
     args.num_labels = num_labels
-    args.train_model_type = args.train_model_type.lower()
+    args.train_model_type = args.train_model_type#.lower()
     configObj = MSMarcoConfigDict[args.train_model_type]
     args.model_name_or_path = checkpoint_path
     if 'fairseq' not in args.train_model_type:
