@@ -21,10 +21,55 @@
 # and training will start immediately
 
 # # Passage ANCE(FirstP) 
+# gpu_no=1
+# seq_length=512
+# model_type=rdot_nll_fairseq_fast
+# tokenizer_type="roberta-base-fast-passsmall10"
+# base_data_dir="../../data/raw_data/"
+# preprocessed_data_dir="${base_data_dir}ann_data_${tokenizer_type}_${seq_length}/"
+# job_name="OSPass512_test"
+# pretrained_checkpoint_dir='../../data/model_temp/Checkpoint'
+# data_type=1
+# warmup_steps=5000
+# per_gpu_train_batch_size=8
+# gradient_accumulation_steps=2
+# learning_rate=1e-6
+
+
+
+# preprocess_cmd="\
+# python ../data/msmarco_data.py --data_dir $base_data_dir --out_data_dir $preprocessed_data_dir --train_model_type $model_type --model_file checkpoint_best.pt  \
+# --model_name_or_path ../../data/model_temp --max_seq_length $seq_length --data_type $data_type --bpe_vocab_file ../../data/bert-16g-0930/vocab.txt\
+# "
+
+
+# gpu_no=1
+# seq_length=512
+# model_type=ELECTRA_Dot_NLL_LN
+# tokenizer_type="bert-base-uncased"
+# base_data_dir="../../data/raw_data/"
+# preprocessed_data_dir="${base_data_dir}ann_data_${tokenizer_type}_${seq_length}/"
+# job_name="OSPass512_test"
+# pretrained_checkpoint_dir='../../data/model_temp/Checkpoint'
+# data_type=1
+# warmup_steps=5000
+# per_gpu_train_batch_size=8
+# gradient_accumulation_steps=2
+# learning_rate=1e-6
+
+
+
+# preprocess_cmd="\
+# python ../data/msmarco_data.py --data_dir $base_data_dir --out_data_dir $preprocessed_data_dir --train_model_type $model_type --model_file checkpoint_best.pt  \
+# --model_name_or_path ../../data/model_temp --max_seq_length $seq_length --data_type $data_type --do_lower_case --tokenizer_name bert-base-uncased \
+# "
+
+
+
 gpu_no=1
 seq_length=512
-model_type=rdot_nll_fairseq_fast
-tokenizer_type="roberta-base-fast-passsmall10"
+model_type=ELECTRA_Dot_NLL_LN
+tokenizer_type="bert-base-cased"
 base_data_dir="../../data/raw_data/"
 preprocessed_data_dir="${base_data_dir}ann_data_${tokenizer_type}_${seq_length}/"
 job_name="OSPass512_test"
@@ -35,61 +80,25 @@ per_gpu_train_batch_size=8
 gradient_accumulation_steps=2
 learning_rate=1e-6
 
-# Document ANCE(FirstP) 
-# gpu_no=4
-# seq_length=512
-# tokenizer_type="roberta-base-doc"
-# model_type=rdot_nll
-# base_data_dir="../../data/raw_data/"
-# preprocessed_data_dir="${base_data_dir}ann_data_${tokenizer_type}_${seq_length}/"
-# job_name="OSDoc512_test"
-# pretrained_checkpoint_dir='../../data/model_temp/Checkpoint'
-# data_type=0
-# warmup_steps=3000
-# per_gpu_train_batch_size=8
-# gradient_accumulation_steps=2
-# learning_rate=5e-6
 
-# # Document ANCE(MaxP) 
-# gpu_no=8
-# seq_length=2048
-# tokenizer_type="roberta-base"
-# model_type=rdot_nll_multi_chunk
-# base_data_dir="../data/raw_data/"
-# preprocessed_data_dir="${base_data_dir}ann_data_${tokenizer_type}_${seq_length}/"
-# job_name="OSDoc2048"
-# pretrained_checkpoint_dir="warmup or trained checkpoint path"
-# data_type=0
-# warmup_steps=500
-# per_gpu_train_batch_size=2
-# gradient_accumulation_steps=8
-# learning_rate=1e-5
-
-##################################### Data Preprocessing ################################
-# model_dir="${base_data_dir}${job_name}/"
-# model_ann_data_dir="${model_dir}ann_data/"
-
-# preprocess_cmd="\
-# python ../data/msmarco_data.py --data_dir $base_data_dir --out_data_dir $preprocessed_data_dir --train_model_type $model_type \
-# --model_name_or_path roberta-base --max_seq_length $seq_length --data_type $data_type\
-# "
 
 preprocess_cmd="\
 python ../data/msmarco_data.py --data_dir $base_data_dir --out_data_dir $preprocessed_data_dir --train_model_type $model_type --model_file checkpoint_best.pt  \
---model_name_or_path ../../data/model_temp --max_seq_length $seq_length --data_type $data_type --bpe_vocab_file ../../data/bert-16g-0930/vocab.txt\
+--model_name_or_path ../../data/model_temp --max_seq_length $seq_length --data_type $data_type --tokenizer_name bert-base-cased \
 "
+
 
 
 echo $preprocess_cmd
 eval $preprocess_cmd
 
-if [[ $? = 0 ]]; then
-    echo "successfully created preprocessed data"
-else
-	echo "preprocessing failed"
-    echo "failure: $?"
-    exit 1
-fi
+# if [[ $? = 0 ]]; then
+#     echo "successfully created preprocessed data"
+# else
+# 	echo "preprocessing failed"
+#     echo "failure: $?"
+#     exit 1
+# fi
 
 ##################################### Inital ANN Data generation ################################
 # initial_data_gen_cmd="\

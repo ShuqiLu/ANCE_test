@@ -122,13 +122,13 @@ def train(args, model, query_cache, passage_cache):
             global_step=0
 
 
-        nq_dev_nll_loss, nq_correct_ratio = evaluate_dev(args, model, passage_cache)
-        dev_nll_loss_trivia, correct_ratio_trivia = evaluate_dev(args, model, passage_cache, "-trivia")
-        if is_first_worker():
-            tb_writer.add_scalar("dev_nll_loss/dev_nll_loss", nq_dev_nll_loss, global_step)
-            tb_writer.add_scalar("dev_nll_loss/correct_ratio", nq_correct_ratio, global_step)
-            tb_writer.add_scalar("dev_nll_loss/dev_nll_loss_trivia", dev_nll_loss_trivia, global_step)
-            tb_writer.add_scalar("dev_nll_loss/correct_ratio_trivia", correct_ratio_trivia, global_step)
+        # nq_dev_nll_loss, nq_correct_ratio = evaluate_dev(args, model, passage_cache)
+        # dev_nll_loss_trivia, correct_ratio_trivia = evaluate_dev(args, model, passage_cache, "-trivia")
+        # if is_first_worker():
+        #     tb_writer.add_scalar("dev_nll_loss/dev_nll_loss", nq_dev_nll_loss, global_step)
+        #     tb_writer.add_scalar("dev_nll_loss/correct_ratio", nq_correct_ratio, global_step)
+        #     tb_writer.add_scalar("dev_nll_loss/dev_nll_loss_trivia", dev_nll_loss_trivia, global_step)
+        #     tb_writer.add_scalar("dev_nll_loss/correct_ratio_trivia", correct_ratio_trivia, global_step)
 
     while global_step < args.max_steps:
 
@@ -143,7 +143,7 @@ def train(args, model, query_cache, passage_cache):
                 # assert 1==0
                 if ann_path is None:
                     ann_no, ann_path, ndcg_json = get_latest_ann_data(args.blob_ann_dir)
-                    print('???',args.blob_ann_dir,ann_path,last_ann_no)
+                    #print('???',args.blob_ann_dir,ann_path,last_ann_no)
                     ann_no=-1
                 if ann_path is not None and ann_no != last_ann_no:
                     logger.info("Training on new add data at %s", ann_path)
@@ -203,23 +203,38 @@ def train(args, model, query_cache, passage_cache):
 
         try:
             batch = next(train_dataloader_iter)
+            # if step==169045 or step==169046:
+            #     print('????',batch)
         except StopIteration:
             logger.info("Finished iterating current dataset, begin reiterate")
+            print('Finished iterating current dataset, begin reiterate!!!!',dist.get_rank())
             if args.num_epoch != 0:
                 iter_count += 1
                 if is_first_worker():
                     tb_writer.add_scalar("epoch", iter_count-1, global_step-1)
                     tb_writer.add_scalar("epoch", iter_count, global_step)
-            nq_dev_nll_loss, nq_correct_ratio = evaluate_dev(args, model, passage_cache)
-            dev_nll_loss_trivia, correct_ratio_trivia = evaluate_dev(args, model, passage_cache, "-trivia")
-            if is_first_worker():
-                tb_writer.add_scalar("dev_nll_loss/dev_nll_loss", nq_dev_nll_loss, global_step)
-                tb_writer.add_scalar("dev_nll_loss/correct_ratio", nq_correct_ratio, global_step)
-                tb_writer.add_scalar("dev_nll_loss/dev_nll_loss_trivia", dev_nll_loss_trivia, global_step)
-                tb_writer.add_scalar("dev_nll_loss/correct_ratio_trivia", correct_ratio_trivia, global_step)
+            # nq_dev_nll_loss, nq_correct_ratio = evaluate_dev(args, model, passage_cache)
+            # dev_nll_loss_trivia, correct_ratio_trivia = evaluate_dev(args, model, passage_cache, "-trivia")
+            # if is_first_worker():
+            #     tb_writer.add_scalar("dev_nll_loss/dev_nll_loss", nq_dev_nll_loss, global_step)
+            #     tb_writer.add_scalar("dev_nll_loss/correct_ratio", nq_correct_ratio, global_step)
+            #     tb_writer.add_scalar("dev_nll_loss/dev_nll_loss_trivia", dev_nll_loss_trivia, global_step)
+            #     tb_writer.add_scalar("dev_nll_loss/correct_ratio_trivia", correct_ratio_trivia, global_step)
             train_dataloader_iter = iter(train_dataloader)
             batch = next(train_dataloader_iter)
-            dist.barrier()
+            #dist.barrier()
+
+        # if step<169045:
+        #     step+=1
+        #     if step % args.gradient_accumulation_steps == 0:
+        #         global_step += 1
+        #         if args.logging_steps > 0 and global_step % args.logging_steps == 0:
+        #             if is_first_worker():
+        #                 print('step: ',global_step)
+
+        #     continue
+
+        #print('step???: ',step,dist.get_rank())
 
         if args.num_epoch != 0 and iter_count > args.num_epoch:
             break

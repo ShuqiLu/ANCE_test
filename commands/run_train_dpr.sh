@@ -26,7 +26,7 @@ python -m torch.distributed.launch --nproc_per_node=$gpu_no ../drivers/run_ann_d
 --model_name_or_path $pretrained_checkpoint_dir --task_name MSMarco $triplet --data_dir $preprocessed_data_dir \
 --ann_dir $model_ann_data_dir --max_seq_length $seq_length --per_gpu_train_batch_size=$train_batch_size \
 --gradient_accumulation_steps $gradient_accumulation_steps --learning_rate $learning_rate --output_dir $model_dir \
---warmup_steps $warmup_steps --logging_steps 1 --save_steps 1 --log_dir "${model_dir}/log/" --blob_ann_dir ${blob_ann_dir} --blob_output_dir ${blob_output_dir} \
+--warmup_steps $warmup_steps --logging_steps 100 --save_steps 10000 --log_dir "${model_dir}/log/" --blob_ann_dir ${blob_ann_dir} --blob_output_dir ${blob_output_dir} \
 "
 
 echo $train_cmd

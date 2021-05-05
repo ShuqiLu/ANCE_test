@@ -223,7 +223,7 @@ def preprocess(args):
             args,
             pid2offset,
             "queries.train.tsv",
-            "qrels.train.sample10.tsv",
+            "qrels.train.tsv",
             "train-query",
             "train-qrel.tsv")
         write_query_rel(
@@ -499,6 +499,17 @@ def get_arguments():
         default=None,
         type=str,
         #required=True,
+    )
+    parser.add_argument(
+        "--do_lower_case", 
+        action="store_true", 
+        help="Set this flag if you are using an uncased model.",
+    )
+    parser.add_argument(
+        "--tokenizer_name",
+        default="",
+        type=str,
+        help="Pretrained tokenizer name or path if not the same as model_name",
     )
 
     args = parser.parse_args()

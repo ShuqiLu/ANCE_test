@@ -313,6 +313,7 @@ class StreamingDataset(IterableDataset):
         self.fn = fn
         self.num_replicas=-1 
         self.distributed = distributed
+
     
     def __iter__(self):
         if dist.is_initialized():
@@ -323,6 +324,8 @@ class StreamingDataset(IterableDataset):
         for i, element in enumerate(self.elements):
             if self.distributed and self.num_replicas != -1 and i % self.num_replicas != self.rank:
                 continue
+            # if self.rank==3:
+            #     print('here... ',i,len(self.elements))
             records = self.fn(element, i)
             for rec in records:
                 yield rec
@@ -330,16 +333,18 @@ class StreamingDataset(IterableDataset):
 
 def tokenize_to_file(args, i, num_process, in_path, out_path, line_fn):
 
-    configObj = MSMarcoConfigDict[args.model_type]
-    if 'fast' in args.model_type:
+
+    configObj = MSMarcoConfigDict[args.train_model_type]
+    if 'fast' in args.train_model_type:
         tokenizer = BertWordPieceTokenizer(args.bpe_vocab_file, clean_text=False, strip_accents=False, lowercase=False)
-    elif 'fairseq' in args.model_type:
+    elif 'fairseq' in args.train_model_type:
         #tokenizer=configObj.tokenizer_class.from_pretrained(args.model_name_or_path,checkpoint_file='model.pt')
         tokenizer=torch.hub.load('pytorch/fairseq', 'roberta.base')
     else:
         tokenizer = configObj.tokenizer_class.from_pretrained(
-            args.model_name_or_path,
-            do_lower_case=True,
+            #args.model_name_or_path,
+            args.tokenizer_name if args.tokenizer_name else args.model_name_or_path,
+            do_lower_case=args.do_lower_case,
             cache_dir=None,
         )
     #print('???',in_path,out_path)

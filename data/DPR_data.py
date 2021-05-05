@@ -13,7 +13,7 @@ import csv
 from utils.util import multi_file_process, numbered_byte_file_generator, EmbeddingCache
 import pickle
 from tokenizers import BertWordPieceTokenizer, normalizers, pre_tokenizers
-
+import torch.distributed as dist
 def normalize_question(question: str) -> str:
     if question[-1] == '?':
         question = question[:-1]
@@ -318,6 +318,10 @@ def QueryPreprocessingFn(args, qid, text, tokenizer):
 
 def GetProcessingFn(args, query=False):
     def fn(vals, i):
+
+        # if dist.get_rank()==3:
+        #     print('!!!!',i)
+
         passage_len, passage = vals
         max_len = args.max_seq_length
         
@@ -331,6 +335,9 @@ def GetProcessingFn(args, query=False):
         all_input_ids_a = torch.tensor([f[1] for f in passage_collection], dtype=torch.int)
         all_attention_mask_a = torch.tensor([f[2] for f in passage_collection], dtype=torch.bool)
         all_token_type_ids_a = torch.tensor([f[3] for f in passage_collection], dtype=torch.uint8)
+
+        # if dist.get_rank()==3:
+        #     print('!!!!',all_input_ids_a.shape,query2id_tensor.shape,all_attention_mask_a.shape,all_token_type_ids_a.shape)
 
         dataset = TensorDataset(all_input_ids_a, all_attention_mask_a, all_token_type_ids_a, query2id_tensor)
 
@@ -374,15 +381,31 @@ def GetTripletTrainingDataProcessingFn(args, query_cache, passage_cache, shuffle
         all_input_ids_a = []
         all_attention_mask_a = []
 
+        # if dist.get_rank()==3:
+        #     print('query process i: ',i)
+
         query_data = GetProcessingFn(args, query=True)(query_cache[qid], qid)[0]
         pos_data = GetProcessingFn(args, query=False)(passage_cache[pos_pid], pos_pid)[0]
 
         if shuffle:
             random.shuffle(neg_pids)
 
-        neg_data = GetProcessingFn(args, query=False)(passage_cache[neg_pids[0]], neg_pids[0])[0]
-        yield (query_data[0], query_data[1], query_data[2], pos_data[0], pos_data[1], pos_data[2], 
-            neg_data[0], neg_data[1], neg_data[2])
+        # neg_data = GetProcessingFn(args, query=False)(passage_cache[neg_pids[0]], neg_pids[0])[0]
+        # yield (query_data[0], query_data[1], query_data[2], pos_data[0], pos_data[1], pos_data[2], 
+        #     neg_data[0], neg_data[1], neg_data[2])
+        
+        # if i>169000:
+        #     print('!!!!',neg_pids,i)
+        count=0
+        for neg_pid in neg_pids:
+            neg_data = GetProcessingFn(
+                args, query=False)(
+                passage_cache[neg_pid], neg_pid)[0]
+            # if dist.get_rank()==3:
+            #     print('neg process.... i: ',i,query_data[0].shape,len(neg_pids),count)
+            yield (query_data[0], query_data[1], query_data[2], pos_data[0], pos_data[1], pos_data[2],
+                   neg_data[0], neg_data[1], neg_data[2])
+            count+=1
 
     return fn
 
