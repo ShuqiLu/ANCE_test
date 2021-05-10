@@ -42,11 +42,13 @@
 # --model_name_or_path ../../data/model_temp --max_seq_length $seq_length --data_type $data_type --bpe_vocab_file ../../data/bert-16g-0930/vocab.txt\
 # "
 
+#----------------------------------------------------------------------------------------------------------------------------------------------
 
 # gpu_no=1
 # seq_length=512
-# model_type=ELECTRA_Dot_NLL_LN
-# tokenizer_type="bert-base-uncased"
+# model_type=ERNIE2Dot_NLL_LN
+# #tokenizer_type="bert-base-uncased"
+# tokenizer_type="ernie-uncased"
 # base_data_dir="../../data/raw_data/"
 # preprocessed_data_dir="${base_data_dir}ann_data_${tokenizer_type}_${seq_length}/"
 # job_name="OSPass512_test"
@@ -59,17 +61,22 @@
 
 
 
+# # preprocess_cmd="\
+# # python ../data/msmarco_data.py --data_dir $base_data_dir --out_data_dir $preprocessed_data_dir --train_model_type $model_type --model_file checkpoint_best.pt  \
+# # --model_name_or_path ../../data/model_temp --max_seq_length $seq_length --data_type $data_type --do_lower_case --tokenizer_name bert-base-uncased \
+# # "
+
 # preprocess_cmd="\
 # python ../data/msmarco_data.py --data_dir $base_data_dir --out_data_dir $preprocessed_data_dir --train_model_type $model_type --model_file checkpoint_best.pt  \
-# --model_name_or_path ../../data/model_temp --max_seq_length $seq_length --data_type $data_type --do_lower_case --tokenizer_name bert-base-uncased \
+# --model_name_or_path nghuyong/ernie-2.0-en --max_seq_length $seq_length --data_type $data_type --do_lower_case \
 # "
 
-
+#----------------------------------------------------------------------------------------------------------------------------------------------
 
 gpu_no=1
-seq_length=512
+seq_length=128
 model_type=ELECTRA_Dot_NLL_LN
-tokenizer_type="bert-base-cased"
+tokenizer_type="electra-uncased"
 base_data_dir="../../data/raw_data/"
 preprocessed_data_dir="${base_data_dir}ann_data_${tokenizer_type}_${seq_length}/"
 job_name="OSPass512_test"
@@ -84,8 +91,31 @@ learning_rate=1e-6
 
 preprocess_cmd="\
 python ../data/msmarco_data.py --data_dir $base_data_dir --out_data_dir $preprocessed_data_dir --train_model_type $model_type --model_file checkpoint_best.pt  \
---model_name_or_path ../../data/model_temp --max_seq_length $seq_length --data_type $data_type --tokenizer_name bert-base-cased \
+--model_name_or_path google/electra-base-discriminator --max_seq_length $seq_length --data_type $data_type --do_lower_case \
 "
+
+#----------------------------------------------------------------------------------------------------------------------------------------------
+
+# gpu_no=1
+# seq_length=512
+# model_type=ERNIE2Dot_NLL_LN
+# tokenizer_type="bert-base-cased"
+# base_data_dir="../../data/raw_data/"
+# preprocessed_data_dir="${base_data_dir}ann_data_${tokenizer_type}_${seq_length}/"
+# job_name="OSPass512_test"
+# pretrained_checkpoint_dir='../../data/model_temp/Checkpoint'
+# data_type=1
+# warmup_steps=5000
+# per_gpu_train_batch_size=8
+# gradient_accumulation_steps=2
+# learning_rate=1e-6
+
+
+
+# preprocess_cmd="\
+# python ../data/msmarco_data.py --data_dir $base_data_dir --out_data_dir $preprocessed_data_dir --train_model_type $model_type --model_file checkpoint_best.pt  \
+# --model_name_or_path ../../data/model_temp --max_seq_length $seq_length --data_type $data_type --tokenizer_name bert-base-cased \
+# "
 
 
 

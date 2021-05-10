@@ -63,15 +63,23 @@ from msmarco_eval import quality_checks_qids, compute_metrics, load_reference
 
 #-----------------------------------------------------------------------------
 
-exp=sys.argv[1] 
-model_num=sys.argv[2] 
+# exp=sys.argv[1] 
+# model_num=sys.argv[2] 
+
+# checkpoint =  0 
+# data_type = 0 
+# test_set = 0 
+# checkpoint_path ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/'+str(exp)+'/ann_data'+str(model_num)+'/'
+# raw_data_dir = '/home/dihe/Projects/data/raw_data/'
+# processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-docdev_512'
+
 
 checkpoint =  0 
-data_type = 0 
+data_type = 1 
 test_set = 0 
-checkpoint_path ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/'+str(exp)+'/ann_data'+str(model_num)+'/'
+checkpoint_path ='/home/dihe/cudnn_file/recommender_shuqi/exp_01_22_03/save/ann_data/'
 raw_data_dir = '/home/dihe/Projects/data/raw_data/'
-processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-docdev_512'
+processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_bert-base-uncased_512/'
 
 
 
