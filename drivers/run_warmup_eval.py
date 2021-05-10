@@ -814,10 +814,11 @@ def main():
         args.train_model_type, args)
 
     # Training
+    results = evaluation(args, model, tokenizer)
+    assert 1==0
     if args.do_train:
 
-        results = evaluation(args, model, tokenizer)
-        assert 1==0
+
         logger.info("Training/evaluation parameters %s", args)
 
         def train_fn(line, i):

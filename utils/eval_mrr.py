@@ -174,8 +174,10 @@ def passage_dist_eval_last(args, model, tokenizer):
     for item in ref_dict:
         if item not in dev_query_positive_id:
             dev_query_positive_id[item]={}
-        dev_query_positive_id[item][ref_dict[item]]=1
-
+        #assert len(ref_dict[item])==1,ref_dict[item]
+        for item2 in ref_dict[item]:
+            dev_query_positive_id[item][item2]=1
+    print('read ok...')
     recall_1000 = combined_dist_eval_last(
         args, model, queries_path, passage_path, fn, fn, top1k_qid_pid, ref_dict,dev_query_positive_id)
 
