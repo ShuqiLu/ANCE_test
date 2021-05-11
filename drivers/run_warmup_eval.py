@@ -266,11 +266,14 @@ def train(args, model, tokenizer, f, train_fn):
                     logs = {}
                     if args.evaluate_during_training and global_step % (args.logging_steps_per_eval*args.logging_steps) == 0:
                         model.eval()
-                        reranking_mrr, full_ranking_mrr = passage_dist_eval(
+                        # reranking_mrr, full_ranking_mrr = passage_dist_eval(
+                        #     args, model, tokenizer)
+                        reranking_mrr, full_ranking_mrr,recall = passage_dist_eval_last(
                             args, model, tokenizer)
                         if is_first_worker():
                             print(
                                 "Reranking/Full ranking mrr: {0}/{1}".format(str(reranking_mrr), str(full_ranking_mrr)))
+                            print("recall@1k: ",recall)
                             mrr_dict = {"reranking": float(
                                 reranking_mrr), "full_raking": float(full_ranking_mrr)}
                             tb_writer.add_scalars("mrr", mrr_dict, global_step)
@@ -814,8 +817,8 @@ def main():
         args.train_model_type, args)
 
     # Training
-    results = evaluation(args, model, tokenizer)
-    assert 1==0
+    # results = evaluation(args, model, tokenizer)
+    # assert 1==0
     if args.do_train:
 
 

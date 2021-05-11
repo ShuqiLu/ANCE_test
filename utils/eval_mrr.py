@@ -178,12 +178,12 @@ def passage_dist_eval_last(args, model, tokenizer):
         for item2 in ref_dict[item]:
             dev_query_positive_id[item][item2]=1
     print('read ok...')
-    recall_1000 = combined_dist_eval_last(
+    reranking_mrr, full_ranking_mrr,recall_1000 = combined_dist_eval_last(
         args, model, queries_path, passage_path, fn, fn, top1k_qid_pid, ref_dict,dev_query_positive_id)
 
 
 
-    return recall_1000
+    return reranking_mrr, full_ranking_mrr,recall_1000
 
 
 
@@ -210,105 +210,41 @@ def combined_dist_eval_last(args, model, queries_path, passage_path, query_fn, p
     
 
     # qids_to_ranked_candidate_passages = {} 
-    # for query_idx in range(len(I_nearest_neighbor)): 
-    #     seen_pid = set()
-    #     query_id = query_embedding2id[query_idx]
-    #     prediction[query_id] = {}
 
-    #     top_ann_pid = I_nearest_neighbor[query_idx].copy()
-    #     selected_ann_idx = top_ann_pid[:topN]
-    #     rank = 0
-        
-    #     if query_id in qids_to_ranked_candidate_passages:
-    #         pass    
-    #     else:
-    #         # By default, all PIDs in the list of 1000 are 0. Only override those that are given
-    #         tmp = [0] * 1000
-    #         qids_to_ranked_candidate_passages[query_id] = tmp
-                
-    #     for idx in selected_ann_idx:
-    #         pred_pid = passage_embedding2id[idx]
-            
-    #         if not pred_pid in seen_pid:
-    #             # this check handles multiple vector per document
-    #             qids_to_ranked_candidate_passages[query_id][rank]=pred_pid
-    #             Atotal += 1
-    #             if pred_pid not in dev_query_positive_id[query_id]:
-    #                 Alabeled += 1
-    #             # if rank < 10:
-    #             #     total += 1
-    #             #     if pred_pid not in dev_query_positive_id[query_id]:
-    #             #         labeled += 1
-    #             rank += 1
-    #             prediction[query_id][pred_pid] = -rank
-    #             seen_pid.add(pred_pid)
 
-    # use out of the box evaluation script
+    pid_dict = dict([(p, i) for i, p in enumerate(psg_ids)])
+    arr_data = []
+    d_data = []
+    for i, qid in enumerate(query_ids):
+        q_emb = query_embs[i:i+1]
+        pid_subset = topk_dev_qid_pid[qid]
+        ds, top_pids = get_topk_restricted(
+            q_emb, psg_embs, pid_dict, psg_ids, pid_subset, 10)
+        arr_data.append(top_pids)
+        d_data.append(ds)
+    _D = np.array(d_data)
+    _I = np.array(arr_data)
+
+    # reranking mrr
+    reranking_mrr = compute_mrr(_D, _I, query_ids, ref_dict)
+
+
+
+    
     
 
     D2 = D[:, :1000]
     I2 = I[:, :1000]
     # full mrr
-    recall_1000 = compute_mrr_last(D2, I2, query_ids, ref_dict,dev_query_positive_id)
+    full_ranking_mrr,recall_1000 = compute_mrr_last(D2, I2, query_ids, ref_dict,dev_query_positive_id)
 
     del psg_embs
     torch.cuda.empty_cache()
     dist.barrier()
-    return recall_1000
-
-
-def compute_mrr_last(D, I, qids, ref_dict,dev_query_positive_id):
-    knn_pkl = {"D": D, "I": I}
-    all_knn_list = all_gather(knn_pkl)
-    mrr = 0.0
-    final_recall=0.0
-    if is_first_worker():
-        prediction = {}
-        D_merged = concat_key(all_knn_list, "D", axis=1)
-        I_merged = concat_key(all_knn_list, "I", axis=1)
-        print(D_merged.shape, I_merged.shape)
-        # we pad with negative pids and distance -128 - if they make it to the top we have a problem
-        idx = np.argsort(D_merged, axis=1)[:, ::-1][:, :1000]
-        sorted_I = np.take_along_axis(I_merged, idx, axis=1)
-        candidate_dict = {}
-        for i, qid in enumerate(qids):
-            seen_pids = set()
-            if qid not in candidate_dict:
-                prediction[qid] = {}
-                #candidate_dict[qid] = [0]*1000
-            j = 0
-            for pid in sorted_I[i]:
-                if pid >= 0 and pid not in seen_pids:
-                    #candidate_dict[qid][j] = pid
-                    prediction[qid][pid] =  -(j+1)#-rank
-                    j += 1
-                    seen_pids.add(pid)
-
-        # allowed, message = quality_checks_qids(ref_dict, candidate_dict)
-        # if message != '':
-        #     print(message)
-
-        # mrr_metrics = compute_metrics(ref_dict, candidate_dict)
-        # mrr = mrr_metrics["MRR @10"]
-        # print(mrr)
-        evaluator = pytrec_eval.RelevanceEvaluator(
-        convert_to_string_id(dev_query_positive_id), {'recall'})
-
-        eval_query_cnt = 0
-        recall = 0
-        topN=1000
-        result = evaluator.evaluate(convert_to_string_id(prediction))
-        for k in result.keys():
-            eval_query_cnt += 1
-            recall += result[k]["recall_"+str(topN)]
-
-        
-        final_recall = recall / eval_query_cnt
-        print('final_recall: ',final_recall)
+    return  reranking_mrr, full_ranking_mrr,recall_1000
 
 
 
-    return final_recall
 
 
 
@@ -359,6 +295,69 @@ def combined_dist_eval(args, model, queries_path, passage_path, query_fn, psg_fn
     dist.barrier()
     return reranking_mrr, full_ranking_mrr
 
+
+
+def compute_mrr_last(D, I, qids, ref_dict,dev_query_positive_id):
+    knn_pkl = {"D": D, "I": I}
+    all_knn_list = all_gather(knn_pkl)
+    mrr = 0.0
+    final_recall=0.0
+    if is_first_worker():
+        prediction = {}
+        D_merged = concat_key(all_knn_list, "D", axis=1)
+        I_merged = concat_key(all_knn_list, "I", axis=1)
+        print(D_merged.shape, I_merged.shape)
+        # we pad with negative pids and distance -128 - if they make it to the top we have a problem
+        idx = np.argsort(D_merged, axis=1)[:, ::-1][:, :1000]
+        sorted_I = np.take_along_axis(I_merged, idx, axis=1)
+        candidate_dict = {}
+        for i, qid in enumerate(qids):
+            seen_pids = set()
+            if qid not in candidate_dict:
+                prediction[qid] = {}
+                candidate_dict[qid] = [0]*1000
+            j = 0
+            for pid in sorted_I[i]:
+                if pid >= 0 and pid not in seen_pids:
+                    candidate_dict[qid][j] = pid
+                    prediction[qid][pid] =  -(j+1)#-rank
+                    j += 1
+                    seen_pids.add(pid)
+
+        # allowed, message = quality_checks_qids(ref_dict, candidate_dict)
+        # if message != '':
+        #     print(message)
+
+        # mrr_metrics = compute_metrics(ref_dict, candidate_dict)
+        # mrr = mrr_metrics["MRR @10"]
+        # print(mrr)
+        allowed, message = quality_checks_qids(ref_dict, candidate_dict)
+        if message != '':
+            print(message)
+
+        mrr_metrics = compute_metrics(ref_dict, candidate_dict)
+        mrr = mrr_metrics["MRR @10"]
+        print(mrr)
+
+
+        evaluator = pytrec_eval.RelevanceEvaluator(
+        convert_to_string_id(dev_query_positive_id), {'recall'})
+
+        eval_query_cnt = 0
+        recall = 0
+        topN=1000
+        result = evaluator.evaluate(convert_to_string_id(prediction))
+        for k in result.keys():
+            eval_query_cnt += 1
+            recall += result[k]["recall_"+str(topN)]
+
+        
+        final_recall = recall / eval_query_cnt
+        print('final_recall: ',final_recall)
+
+
+
+    return mrr,final_recall
 
 def compute_mrr(D, I, qids, ref_dict):
     knn_pkl = {"D": D, "I": I}
