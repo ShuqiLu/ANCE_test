@@ -21,8 +21,10 @@ tokenizer_type=roberta-base-fast-trainqueryeval
 base_data_dir="/home/dihe/Projects/data/raw_data/"
 preprocessed_data_dir="${base_data_dir}ann_data_${tokenizer_type}_${seq_length}/"
 #job_name=eval_exp_12_23_02_400000_dev
-# job_name=eval_exp_01_05_09_820000
-# pretrained_checkpoint_dir=/home/dihe/Projects/data/raw_data/exp_01_05_09/checkpoint-820000/model.pt
+# job_name=eval_exp_01_05_09_900000
+# pretrained_checkpoint_dir=/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_01_05_09/checkpoint-900000/model.pt
+job_name=eval_exp_01_05_09_910000
+pretrained_checkpoint_dir=/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_21_04_14_01/check/checkpoint-910000/model.pt
 
 # job_name=eval_exp_01_05_09_100000
 # pretrained_checkpoint_dir=/home/dihe/Projects/data/raw_data/exp_01_05_09/checkpoint-100000/model.pt
@@ -46,8 +48,8 @@ preprocessed_data_dir="${base_data_dir}ann_data_${tokenizer_type}_${seq_length}/
 # job_name=eval_exp_01_05_09_900000
 # pretrained_checkpoint_dir=/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_01_05_09/checkpoint-900000/model.pt
 
-job_name=eval_exp_21_04_14_01_910000
-pretrained_checkpoint_dir=/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_21_04_14_01/checkpoint-910000/model.pt
+# job_name=eval_exp_21_04_14_01_910000
+# pretrained_checkpoint_dir=/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_21_04_14_01/checkpoint-910000/model.pt
 data_type=0
 warmup_steps=3000
 per_gpu_train_batch_size=16

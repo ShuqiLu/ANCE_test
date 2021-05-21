@@ -115,6 +115,7 @@ class NLL(EmbeddingMixin):
         #assert 1==0
         loss = -1.0 * lsm[:, 0]
 
+        acc=lsm[:,0]>lsm[:,1]
 
         # score_a=(q_embs * a_embs).sum(-1)#.unsqueeze(1)
         # score_b=(q_embs * b_embs).sum(-1)#.unsqueeze(1)
@@ -142,7 +143,7 @@ class NLL(EmbeddingMixin):
         # cls_simb=(q_embs * b_embs).sum(-1)
         #cls_sim= torch.sum((b_embs * a_embs).sum(-1))/b_embs.shape[0]
         # print('cls_sima',cls_sima,'cls_simb',cls_simb)
-        return (loss.mean(),)
+        return (loss.mean(),acc.float().mean())
 
 class NLL_concat(EmbeddingMixin):
     def forward(

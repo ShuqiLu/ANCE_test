@@ -170,6 +170,7 @@ def train(args, model, tokenizer, f, train_fn):
             logger.info("  Start training from a pretrained model")
 
     tr_loss, logging_loss = 0.0, 0.0
+    tr_acc, logging_acc=0.0,0.0
     model.zero_grad()
     train_iterator = trange(
         epochs_trained, int(args.num_train_epochs), desc="Epoch", disable=args.local_rank not in [-1, 0],
@@ -205,11 +206,16 @@ def train(args, model, tokenizer, f, train_fn):
                     outputs = model(*batch)
             # model outputs are always tuple in transformers (see doc)
             loss = outputs[0]
+            acc=outputs[1]
+            #print('???',acc)
 
             if args.n_gpu > 1:
                 loss = loss.mean()  # mean() to average on multi-gpu parallel training
+                acc=acc.float().mean()
+                #print('???',acc)
             if args.gradient_accumulation_steps > 1:
                 loss = loss / args.gradient_accumulation_steps
+                acc=acc/args.gradient_accumulation_steps
 
             if args.fp16:
                 with amp.scale_loss(loss, optimizer) as scaled_loss:
@@ -222,6 +228,8 @@ def train(args, model, tokenizer, f, train_fn):
                         loss.backward()
 
             tr_loss += loss.item()
+            tr_acc+=acc.item()
+
             if (step + 1) % args.gradient_accumulation_steps == 0:
                 if args.fp16:
                     torch.nn.utils.clip_grad_norm_(
@@ -281,6 +289,11 @@ def train(args, model, tokenizer, f, train_fn):
                     logs["learning_rate"] = learning_rate_scalar
                     logs["loss"] = loss_scalar
                     logging_loss = tr_loss
+
+
+                    acc_scalar = (tr_acc - logging_acc) / args.logging_steps
+                    logs["acc"] = acc_scalar
+                    logging_acc = tr_acc
 
                     if is_first_worker():
                         for key, value in logs.items():

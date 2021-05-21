@@ -75,10 +75,24 @@ def write_query_rel(args, pid2offset, query_file, positive_id_file, out_query_fi
             if idx < 3:
                 print(str(idx) + " " + str(q_id))
 
-    qid2offset_path = os.path.join(
-        args.out_data_dir,
-        "qid2offset.pickle",
-    )
+    # qid2offset_path = os.path.join(
+    #     args.out_data_dir,
+    #     "qid2offset.pickle",
+    # )
+
+    if 'train' in out_query_file:
+        qid2offset_path = os.path.join(
+            args.out_data_dir,
+            "qid2offset_train.pickle",
+        )
+    else:
+        qid2offset_path = os.path.join(
+            args.out_data_dir,
+            "qid2offset.pickle",
+        )
+
+
+    
     with open(qid2offset_path, 'wb') as handle:
         pickle.dump(qid2offset, handle, protocol=4)
     print("done saving qid2offset")
@@ -234,13 +248,31 @@ def preprocess(args):
         #     "",
         #     "dev-query",
         #     "dev-qrel.tsv")
+
+
+        # write_query_rel(
+        #     args,
+        #     pid2offset,
+        #     "msmarco-doctrain-queries-small.tsv",
+        #     "",
+        #     "dev-query",
+        #     "dev-qrel.tsv")
+
         write_query_rel(
             args,
             pid2offset,
-            "msmarco-doctrain-queries-small.tsv",
-            "",
+            "msmarco-doctrain-queries.tsv",
+            "msmarco-doctrain-qrels.tsv",
+            "train-query",
+            "train-qrel.tsv")
+        write_query_rel(
+            args,
+            pid2offset,
+            "msmarco-docdev-queries.tsv",
+            "msmarco-docdev-qrels.tsv",
             "dev-query",
             "dev-qrel.tsv")
+
         
     else:
         write_query_rel(
