@@ -17,14 +17,26 @@ seq_length=512
 #tokenizer_type=roberta-base-fast-docdev2
 model_type=rdot_nll_fairseq_fast
 # tokenizer_type=roberta-base-fast-doceval
-tokenizer_type=roberta-base-fast-trainqueryeval
+
+# tokenizer_type=roberta-base-fast-trainqueryeval
+# base_data_dir="/home/dihe/Projects/data/raw_data/"
+# preprocessed_data_dir="${base_data_dir}ann_data_${tokenizer_type}_${seq_length}/"
+# #job_name=eval_exp_12_23_02_400000_dev
+# # job_name=eval_exp_01_05_09_900000
+# # pretrained_checkpoint_dir=/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_01_05_09/checkpoint-900000/model.pt
+# job_name=eval_exp_01_05_09_910000
+# pretrained_checkpoint_dir=/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_21_04_14_01/check/checkpoint-910000/model.pt
+
+
+tokenizer_type=roberta-base-fast-trainqueryeval2
 base_data_dir="/home/dihe/Projects/data/raw_data/"
 preprocessed_data_dir="${base_data_dir}ann_data_${tokenizer_type}_${seq_length}/"
 #job_name=eval_exp_12_23_02_400000_dev
 # job_name=eval_exp_01_05_09_900000
-# pretrained_checkpoint_dir=/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_01_05_09/checkpoint-900000/model.pt
-job_name=eval_exp_01_05_09_910000
-pretrained_checkpoint_dir=/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_21_04_14_01/check/checkpoint-910000/model.pt
+pretrained_checkpoint_dir=/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_01_05_09/checkpoint-900000/model.pt
+job_name=eval_exp_01_05_09_900000
+#pretrained_checkpoint_dir=/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_21_04_14_01/check/checkpoint-900000/model.pt
+
 
 # job_name=eval_exp_01_05_09_100000
 # pretrained_checkpoint_dir=/home/dihe/Projects/data/raw_data/exp_01_05_09/checkpoint-100000/model.pt
@@ -80,7 +92,7 @@ seq_length=128
 
 ##################################### Inference ################################
 model_dir="${base_data_dir}${job_name}/"
-model_ann_data_dir="${model_dir}ann_data/"
+model_ann_data_dir="${model_dir}ann_data_sample20q/"
 
 # initial_data_gen_cmd="\
 # python -m torch.distributed.launch --nproc_per_node=$gpu_no ../drivers/run_ann_data_gen_eval.py --training_dir $model_dir \

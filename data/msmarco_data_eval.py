@@ -250,28 +250,28 @@ def preprocess(args):
         #     "dev-qrel.tsv")
 
 
+        write_query_rel(
+            args,
+            pid2offset,
+            "msmarco-doctrain-queries-small2.tsv",
+            "",
+            "dev-query",
+            "dev-qrel.tsv")
+
         # write_query_rel(
         #     args,
         #     pid2offset,
-        #     "msmarco-doctrain-queries-small.tsv",
-        #     "",
+        #     "msmarco-doctrain-queries.tsv",
+        #     "msmarco-doctrain-qrels.tsv",
+        #     "train-query",
+        #     "train-qrel.tsv")
+        # write_query_rel(
+        #     args,
+        #     pid2offset,
+        #     "msmarco-docdev-queries.tsv",
+        #     "msmarco-docdev-qrels.tsv",
         #     "dev-query",
         #     "dev-qrel.tsv")
-
-        write_query_rel(
-            args,
-            pid2offset,
-            "msmarco-doctrain-queries.tsv",
-            "msmarco-doctrain-qrels.tsv",
-            "train-query",
-            "train-qrel.tsv")
-        write_query_rel(
-            args,
-            pid2offset,
-            "msmarco-docdev-queries.tsv",
-            "msmarco-docdev-qrels.tsv",
-            "dev-query",
-            "dev-qrel.tsv")
 
         
     else:

@@ -73,29 +73,89 @@ checkpoint =  0
 data_type = 0 
 test_set = 1 
 # checkpoint_path ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_01_05_09/ann_data820000/'
-checkpoint_path ='/home/dihe/Projects/data/raw_data/exp_01_05_09/ann_data910000/'
-raw_data_dir = '/home/dihe/Projects/data/raw_data/'
-processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-docdev_512'
+# checkpoint_path ='/home/dihe/Projects/data/raw_data/exp_01_05_09/ann_data910000/'
+# raw_data_dir = '/home/dihe/Projects/data/raw_data/'
+# processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-docdev_512'
 # processed_data_dir2 = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-docdev2_512'
 # checkpoint_path2 ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_01_05_09/ann_data820000/'
 
-processed_data_dir2 = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-trainqueryeval_512'
-checkpoint_path2 ='/home/dihe/Projects/data/raw_data/eval_exp_01_05_09_910000/ann_data/'
+#training mrr
+# checkpoint_path ='/home/dihe/Projects/data/raw_data/exp_01_05_09/ann_data910000/'
+# raw_data_dir = '/home/dihe/Projects/data/raw_data/'
+# processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-docdev_512'
+
+# processed_data_dir2 = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-trainqueryeval_512'
+# checkpoint_path2 ='/home/dihe/Projects/data/raw_data/eval_exp_01_05_09_910000/ann_data/'
+# query_emb_num=4
+
+
+
+
+checkpoint_path ='/home/dihe/Projects/data/raw_data/exp_01_05_09/ann_data910000/'
+raw_data_dir = '/home/dihe/Projects/data/raw_data/'
+processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-docdev_512'
+
+processed_data_dir2 = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-trainqueryeval2_512'
+checkpoint_path2 ='/home/dihe/Projects/data/raw_data/eval_exp_01_05_09_910000/ann_data_sample20q/'
 query_emb_num=4
 
+#dev mrr
+# checkpoint_path ='/home/dihe/Projects/data/raw_data/exp_01_05_09/ann_data900000/'
+# raw_data_dir = '/home/dihe/Projects/data/raw_data/'
+# processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-docdev_512'
 
-# checkpoint_path_origin='/home/dihe/Projects/data/raw_data/exp_01_05_09/ann_data810000/'
-# checkpoint_path_query_origin='/home/dihe/Projects/data/raw_data/eval_exp_01_05_09_810000/ann_data/'
-# processed_data_dir_query_origin=processed_data_dir2
+# processed_data_dir2 = processed_data_dir
+# checkpoint_path2 =checkpoint_path
+# query_emb_num=8
 
-# checkpoint_path_origin='/home/dihe/Projects/data/raw_data/exp_01_05_09/ann_data910000/'
-# checkpoint_path_query_origin='/home/dihe/Projects/data/raw_data/eval_exp_01_05_09_910000/ann_data/'
-# processed_data_dir_query_origin=processed_data_dir2
+
+#sample20
+# checkpoint_path ='/home/dihe/Projects/data/raw_data/exp_01_05_09/ann_data910000/'
+# raw_data_dir = '/home/dihe/Projects/data/raw_data/'
+# processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-docdev_512'
+# processed_data_dir2 = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-trainqueryeval_512'
+# checkpoint_path2 ='/home/dihe/Projects/data/raw_data/eval_exp_01_05_09_910000/ann_data/'
+# query_emb_num=4
+# processed_data_dir_origin='/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-doc_512/'
+# processed_data_dir_query_origin='/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-doc_512/'
 # ann_path='/home/dihe/Projects/data/raw_data/exp_01_05_09/ann_training_data_0'
-processed_data_dir_origin='/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-doc_512/'
-processed_data_dir_query_origin='/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-doc_512/'
-ann_path='/home/dihe/Projects/data/raw_data/exp_01_05_09/ann_training_data_0'
 
+# checkpoint_path ='/home/dihe/Projects/data/raw_data/exp_01_05_09/ann_data910000/'
+# raw_data_dir = '/home/dihe/Projects/data/raw_data/'
+# processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-docdev_512'
+# processed_data_dir2 = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-trainqueryeval2_512'
+# checkpoint_path2 ='/home/dihe/Projects/data/raw_data/eval_exp_01_05_09_910000/ann_data_sample20q/'
+# query_emb_num=4
+# processed_data_dir_origin='/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-doc_512/'
+# processed_data_dir_query_origin='/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-doc_512/'
+# ann_path='/home/dihe/Projects/data/raw_data/exp_01_05_09/ann_training_data_0'
+
+#sample200
+# checkpoint_path ='/home/dihe/Projects/data/raw_data/exp_01_05_09/ann_data910000/'
+# raw_data_dir = '/home/dihe/Projects/data/raw_data/'
+# processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-docdev_512'
+
+# processed_data_dir2 = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-trainqueryeval_512'
+# checkpoint_path2 ='/home/dihe/Projects/data/raw_data/eval_exp_01_05_09_910000/ann_data/'
+# query_emb_num=4
+
+# processed_data_dir_query_origin=processed_data_dir2
+# checkpoint_path_origin='/home/dihe/Projects/data/raw_data/exp_01_05_09/ann_data900000/'
+# checkpoint_path_query_origin='/home/dihe/Projects/data/raw_data/eval_exp_01_05_09_900000/ann_data/'
+
+
+
+# checkpoint_path ='/home/dihe/Projects/data/raw_data/exp_01_05_09/ann_data910000/'
+# raw_data_dir = '/home/dihe/Projects/data/raw_data/'
+# processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-docdev_512'
+
+# processed_data_dir2 = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-trainqueryeval2_512'
+# checkpoint_path2 ='/home/dihe/Projects/data/raw_data/eval_exp_01_05_09_910000/ann_data_sample20q/'
+# query_emb_num=4
+
+# processed_data_dir_query_origin=processed_data_dir2
+# checkpoint_path_origin='/home/dihe/Projects/data/raw_data/exp_01_05_09/ann_data900000/'
+# checkpoint_path_query_origin='/home/dihe/Projects/data/raw_data/eval_exp_01_05_09_900000/ann_data_sample20q/'
 
 
 
@@ -237,33 +297,18 @@ with open(pidmap_path, 'rb') as handle:
 
 
 
-with open(processed_data_dir_query_origin+"/qid2offset_train.pickle", 'rb') as handle:
-    qidmap_origin = pickle.load(handle)
 
-with open(processed_data_dir_query_origin+"/pid2offset.pickle", 'rb') as handle:
-    pidmap_origin = pickle.load(handle)
-
-
-qidmap_re={}
-for item in qidmap:
-    assert qidmap[item] not in qidmap_re
-    qidmap_re[qidmap[item]]=item
 
 pidmap_re={}
 for item in pidmap:
     assert pidmap[item] not in pidmap_re
     pidmap_re[pidmap[item]]=item #'D'+str(item)
 
+qidmap_re={}
+for item in qidmap:
+    assert qidmap[item] not in qidmap_re
+    qidmap_re[qidmap[item]]=item
 
-qidmap_origin_re={}
-for item in qidmap_origin:
-    assert qidmap_origin[item] not in qidmap_origin_re
-    qidmap_origin_re[qidmap_origin[item]]=item
-
-pidmap_origin_re={}
-for item in pidmap_origin:
-    assert pidmap_origin[item] not in pidmap_origin_re
-    pidmap_origin_re[pidmap_origin[item]]=item
 
 def get_reverse_dict(mydict):
     mydict_re={}
@@ -277,6 +322,7 @@ def get_reverse_dict(mydict):
 count_none=0
 dev_query_positive_id = {}
 query_positive_id_path = os.path.join(raw_data_dir, "msmarco-doctrain-qrels.tsv")
+#query_positive_id_path = os.path.join(raw_data_dir, "msmarco-docdev-qrels.tsv")
 
 with open(query_positive_id_path, 'r', encoding='utf8') as f:
     tsvreader = csv.reader(f, delimiter=" ")
@@ -320,6 +366,23 @@ def get_sample20():
 
     
     #train_queries={}
+    with open(processed_data_dir_query_origin+"/qid2offset_train.pickle", 'rb') as handle:
+        qidmap_origin = pickle.load(handle)
+
+    with open(processed_data_dir_query_origin+"/pid2offset.pickle", 'rb') as handle:
+        pidmap_origin = pickle.load(handle)
+    qidmap_origin_re={}
+    for item in qidmap_origin:
+        assert qidmap_origin[item] not in qidmap_origin_re
+        qidmap_origin_re[qidmap_origin[item]]=item
+
+    pidmap_origin_re={}
+    for item in pidmap_origin:
+        assert pidmap_origin[item] not in pidmap_origin_re
+        pidmap_origin_re[pidmap_origin[item]]=item
+
+    
+
     train_q_sample20={}
     with open(ann_path, 'r') as f:
         ann_training_data = f.readlines()
@@ -346,9 +409,6 @@ def get_sample20():
     #     with open(checkpoint_path_query_origin + "dev_query_"+str(checkpoint)+"__embid_p__data_obj_"+str(i)+".pb", 'rb') as handle:
     #         dev_query_embedding2id.append(pickle.load(handle))
     #         print('ok???',2)
-
-
-    
 
     # if (not dev_query_embedding2id) or not (passage_embedding2id):
     #     print("No data found for checkpoint: ",checkpoint)
@@ -387,6 +447,13 @@ def get_sample200():
 
 
     #dev_query_positive_id[topicid]
+
+    with open(processed_data_dir_query_origin+"/qid2offset.pickle", 'rb') as handle:
+        qidmap_origin = pickle.load(handle)
+    qidmap_origin_re={}
+    for item in qidmap_origin:
+        assert qidmap_origin[item] not in qidmap_origin_re
+        qidmap_origin_re[qidmap_origin[item]]=item
 
     dev_query_embedding=[]
     dev_query_embedding2id=[]
@@ -444,13 +511,11 @@ def get_sample200():
                 train_q_sample200[query_id].append(pred_pid)
             if pos_id not in  train_q_sample200[query_id]:
                 train_q_sample200[query_id]+=[pos_id] 
-        if i<5:
-            print(query_id,dev_query_embedding2id[query_idx],query_idx)
-            query_list.append(query_id)
+        # if i<5:
+        #     print(query_id,dev_query_embedding2id[query_idx],query_idx)
+        #     query_list.append(query_id)
 
-    #print(dev_I[:5])
-    #print([[pidmap_re[passage_embedding2id[x]] for x in dev_I[y]] for y in range(5) ])
-    print([train_q_sample200[x] for x in query_list])
+    #print([train_q_sample200[x] for x in query_list])
 
         
     return train_q_sample200
@@ -516,6 +581,11 @@ def EvalDevQuery(query_embedding2id, passage_embedding2id, qidmap_re,pidmap_re, 
     for query_idx in range(len(I_nearest_neighbor)): 
         seen_pid = set()
         query_id = qidmap_re[query_embedding2id[query_idx]]
+
+        if bm25 and query_id not in bm25:
+            #assert 1==0
+            continue
+
         prediction[query_id] = {}
 
         top_ann_pid = I_nearest_neighbor[query_idx].copy()
@@ -526,10 +596,6 @@ def EvalDevQuery(query_embedding2id, passage_embedding2id, qidmap_re,pidmap_re, 
         rank = 0
         flag=0
 
-        if query_id not in bm25:
-            #assert 1==0
-            continue
-        
         if query_id in qids_to_ranked_candidate_passages:
             assert 1==0,"query not in"
             pass    
@@ -582,7 +648,7 @@ def EvalDevQuery(query_embedding2id, passage_embedding2id, qidmap_re,pidmap_re, 
     qids_to_relevant_passageids = {}
     for qid in dev_query_positive_id:
         qid = int(qid)
-        if qid in qids_to_relevant_passageids or qid not in bm25:
+        if qid in qids_to_relevant_passageids:
             pass
         else:
             qids_to_relevant_passageids[qid] = []
@@ -612,7 +678,7 @@ def EvalDevQuery(query_embedding2id, passage_embedding2id, qidmap_re,pidmap_re, 
         ndcg += result[k]["ndcg_cut_10"]
         Map += result[k]["map_cut_10"]
         mrr += result[k]["recip_rank"]
-        recall += result[k]["recall_"+str(1000)]
+        recall += result[k]["recall_"+str(topN)]
 
     final_ndcg = ndcg / eval_query_cnt
     final_Map = Map / eval_query_cnt
@@ -658,73 +724,61 @@ dev_query_embedding2id = np.concatenate(dev_query_embedding2id, axis=0)
 
 
 
-#reranking
-sample20 =get_sample20()
-pidmap_t = collections.defaultdict(list)
-for i in range(len(passage_embedding2id)):
-    pidmap_t[pidmap_re[passage_embedding2id[i]]].append(i)  # abs pos(key) to rele pos(val)
-    
-# rerank_data = {}
-
-all_dev_I = []
-# print('???',len(dev_query_embedding2id),len(sample20))
-# for i,qid in enumerate(dev_query_embedding2id):
-for i,qid in enumerate(range(len(dev_query_embedding2id))):
-    # qid_oo=qid
-    # qid_o=dev_query_embedding2id[qid]
-    qid_r=qidmap_re[dev_query_embedding2id[qid]]
-    p_set = []
-    p_set_map = {}
-    if qid_r not in sample20:
-        print(qid_r,"not in bm25",dev_query_embedding2id[qid])
-
-    else:
-        print(qid_r,"in bm25",dev_query_embedding2id[qid])
-        count = 0
-        for k,pid in enumerate(sample20[qid_r]):
-            if pid in pidmap_t:
-                for val in pidmap_t[pid]:
-                    #val= passage_embedding2id2_r[pidmap[val]]
-                    #val= pidmap[val]
-                    p_set.append(passage_embedding[val])
-                    p_set_map[count] = val # new rele pos(key) to old rele pos(val)
-                    count += 1
-            else:
-                print(pid,"not in passages")
-    if len(p_set)==0:
-        all_dev_I.append([-1]*10)
-    else:
-        if i<5:
-            print(sample20[qid_r],qid_r,dev_query_embedding2id[qid],qid)
-        dim = passage_embedding.shape[1]
-        faiss.omp_set_num_threads(16)
-        cpu_index = faiss.IndexFlatIP(dim)
-        p_set =  np.asarray(p_set)
-        #print('???',p_set.shape)
-        cpu_index.add(p_set)    
-        _, dev_I = cpu_index.search(dev_query_embedding[i:i+1], len(p_set))
+##reranking
+# sample20 =get_sample20()
+# sample20 =get_sample200()
+# pidmap_t = collections.defaultdict(list)
+# for i in range(len(passage_embedding2id)):
+#     pidmap_t[pidmap_re[passage_embedding2id[i]]].append(i)  # abs pos(key) to rele pos(val)
+# all_dev_I = []
+# for i,qid in enumerate(range(len(dev_query_embedding2id))):
+#     qid_r=qidmap_re[dev_query_embedding2id[qid]]
+#     p_set = []
+#     p_set_map = {}
+#     if qid_r not in sample20:
+#         pass
+#     else:
+#         count = 0
+#         for k,pid in enumerate(sample20[qid_r]):
+#             if pid in pidmap_t:
+#                 for val in pidmap_t[pid]:
+#                     p_set.append(passage_embedding[val])
+#                     p_set_map[count] = val # new rele pos(key) to old rele pos(val)
+#                     count += 1
+#             else:
+#                 print(pid,"not in passages")
+#     if len(p_set)==0:
+#         all_dev_I.append([-1]*10)
+#     else:
         
-        if i<5:
-            print(dev_I,dev_query_positive_id[qid_r])
-        for j in range(len(dev_I[0])):
-            dev_I[0][j] = p_set_map[dev_I[0][j]]
-        if i<5:
-            print(dev_I,dev_query_positive_id[qid_r])
-            print([pidmap_re[passage_embedding2id[x]] for x in dev_I[0]])
-            print('-----------------------')
-        all_dev_I.append(dev_I[0])
-#print('???',all_dev_I)
-print(len(sample20))
-result = EvalDevQuery(dev_query_embedding2id, passage_embedding2id, qidmap_re,pidmap_re, dev_query_positive_id, all_dev_I, 10,sample20)
-final_ndcg, eval_query_cnt, final_Map, final_mrr, final_recall, hole_rate, ms_mrr, Ahole_rate, metrics, prediction = result
-print("Reranking Results for checkpoint "+str(checkpoint))
-print("Reranking NDCG@10:" + str(final_ndcg))
-print("Reranking map@10:" + str(final_Map))
-print("Reranking pytrec_mrr:" + str(final_mrr))
-print("Reranking recall@"+str(topN)+":" + str(final_recall))
-print("Reranking hole rate@10:" + str(hole_rate))
-print("Reranking hole rate:" + str(Ahole_rate))
-print("Reranking ms_mrr:" + str(ms_mrr))
+#         dim = passage_embedding.shape[1]
+#         faiss.omp_set_num_threads(16)
+#         cpu_index = faiss.IndexFlatIP(dim)
+#         p_set =  np.asarray(p_set)
+#         cpu_index.add(p_set)    
+#         _, dev_I = cpu_index.search(dev_query_embedding[i:i+1], len(p_set))
+#         # if i<5:
+#         #     print(sample20[qid_r],qid_r,dev_query_embedding2id[qid],qid)
+#         # if i<5:
+#         #     print(dev_I,dev_query_positive_id[qid_r])
+#         for j in range(len(dev_I[0])):
+#             dev_I[0][j] = p_set_map[dev_I[0][j]]
+#         # if i<5:
+#         #     print(dev_I,dev_query_positive_id[qid_r])
+#         #     print([pidmap_re[passage_embedding2id[x]] for x in dev_I[0]])
+#         #     print('-----------------------')
+#         all_dev_I.append(dev_I[0])
+# print(len(sample20),len(all_dev_I))
+# result = EvalDevQuery(dev_query_embedding2id, passage_embedding2id, qidmap_re,pidmap_re, dev_query_positive_id, all_dev_I, 10,bm25=sample20)
+# final_ndcg, eval_query_cnt, final_Map, final_mrr, final_recall, hole_rate, ms_mrr, Ahole_rate, metrics, prediction = result
+# print("Reranking Results for checkpoint "+str(checkpoint))
+# print("Reranking NDCG@10:" + str(final_ndcg))
+# print("Reranking map@10:" + str(final_Map))
+# print("Reranking pytrec_mrr:" + str(final_mrr))
+# print("Reranking recall@"+str(topN)+":" + str(final_recall))
+# print("Reranking hole rate@10:" + str(hole_rate))
+# print("Reranking hole rate:" + str(Ahole_rate))
+# print("Reranking ms_mrr:" + str(ms_mrr))
 
 
 
@@ -738,23 +792,23 @@ print("Reranking ms_mrr:" + str(ms_mrr))
 
 
 #full ranking
-# dim = passage_embedding.shape[1]
-# faiss.omp_set_num_threads(16)
-# cpu_index = faiss.IndexFlatIP(dim)
-# cpu_index.add(passage_embedding)    
-# _, dev_I = cpu_index.search(dev_query_embedding, topN)
-# print('???',dev_I[:10])
-# result = EvalDevQuery(dev_query_embedding2id, passage_embedding2id, qidmap_re,pidmap_re , dev_query_positive_id,dev_I, topN)
+dim = passage_embedding.shape[1]
+faiss.omp_set_num_threads(16)
+cpu_index = faiss.IndexFlatIP(dim)
+cpu_index.add(passage_embedding)    
+_, dev_I = cpu_index.search(dev_query_embedding, topN)
+#print('???',dev_I[:10])
+result = EvalDevQuery(dev_query_embedding2id, passage_embedding2id, qidmap_re,pidmap_re , dev_query_positive_id,dev_I, 10)
 
-# final_ndcg, eval_query_cnt, final_Map, final_mrr, final_recall, hole_rate, ms_mrr, Ahole_rate, metrics, prediction = result
-# print("Results for checkpoint "+str(checkpoint))
-# print("NDCG@10:" + str(final_ndcg))
-# print("map@10:" + str(final_Map))
-# print("pytrec_mrr:" + str(final_mrr))
-# print("recall@"+str(topN)+":" + str(final_recall))
-# print("hole rate@10:" + str(hole_rate))
-# print("hole rate:" + str(Ahole_rate))
-# print("ms_mrr:" + str(ms_mrr))
+final_ndcg, eval_query_cnt, final_Map, final_mrr, final_recall, hole_rate, ms_mrr, Ahole_rate, metrics, prediction = result
+print("Results for checkpoint "+str(checkpoint))
+print("NDCG@10:" + str(final_ndcg))
+print("map@10:" + str(final_Map))
+print("pytrec_mrr:" + str(final_mrr))
+print("recall@"+str(topN)+":" + str(final_recall))
+print("hole rate@10:" + str(hole_rate))
+print("hole rate:" + str(Ahole_rate))
+print("ms_mrr:" + str(ms_mrr))
 
 
 
