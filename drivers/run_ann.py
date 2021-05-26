@@ -159,6 +159,7 @@ def train(args, model, tokenizer, query_cache, passage_cache):
         logger.info("  Continuing training from global step %d", global_step)
 
     tr_loss = 0.0
+    tr_acc = 0.0
     model.zero_grad()
     model.train()
     set_seed(args)  # Added here for reproductibility
@@ -265,6 +266,8 @@ def train(args, model, tokenizer, query_cache, passage_cache):
                 outputs = model(**inputs)
         # model outputs are always tuple in transformers (see doc)
         loss = outputs[0]
+        acc=outputs[1]
+
 
         if args.n_gpu > 1:
             loss = loss.mean()  # mean() to average on multi-gpu parallel training
@@ -282,6 +285,7 @@ def train(args, model, tokenizer, query_cache, passage_cache):
                     loss.backward()
 
         tr_loss += loss.item()
+        tr_acc+= acc.item()
         if step % args.gradient_accumulation_steps == 0:
             if args.fp16:
                 torch.nn.utils.clip_grad_norm_(
@@ -302,6 +306,11 @@ def train(args, model, tokenizer, query_cache, passage_cache):
                 logs["learning_rate"] = learning_rate_scalar
                 logs["loss"] = loss_scalar
                 tr_loss = 0
+
+
+                acc_scalar = tr_acc / args.logging_steps
+                logs["acc"] = acc_scalar
+                tr_acc = 0
 
                 if is_first_worker():
                     for key, value in logs.items():

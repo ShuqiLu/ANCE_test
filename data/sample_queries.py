@@ -15,17 +15,31 @@ train_q_sample20={}
 with open(ann_path, 'r') as f:
     ann_training_data = f.readlines()
 
-file_dict={}
-f2=open('../../data/raw_data/msmarco-doctrain-queries.tsv','r')
-for line in f2:
-	line_t=line.split('\t')
-	file_dict[int(line_t[0])]=line
 
-
-w=open('../../data/raw_data/msmarco-doctrain-queries-small2.tsv','w')
+ann_path2='/home/dihe/Projects/data/raw_data/exp_21_05_21_01_check/ann_training_data_0'
+with open(ann_path2, 'r') as f2:
+    ann_training_data2 = f2.readlines()
+mydict={}
+for line in ann_training_data2:
+	mydict[line.split('\t')[0]]=1
 for line in ann_training_data:
-    line_arr=line.strip().split('\t')
-    qid = qidmap_origin_re[int(line_arr[0])]
-    w.write(file_dict[qid])
-w.close()
+	assert line.split('\t')[0] in mydict
+
+
+
+
+
+# file_dict={}
+# f2=open('../../data/raw_data/msmarco-doctrain-queries.tsv','r')
+# for line in f2:
+# 	line_t=line.split('\t')
+# 	file_dict[int(line_t[0])]=line
+
+
+# w=open('../../data/raw_data/msmarco-doctrain-queries-small3.tsv','w')
+# for line in ann_training_data:
+#     line_arr=line.strip().split('\t')
+#     qid = qidmap_origin_re[int(line_arr[0])]
+#     w.write(file_dict[qid])
+# w.close()
 

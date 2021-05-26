@@ -91,22 +91,88 @@ test_set = 1
 
 
 
-checkpoint_path ='/home/dihe/Projects/data/raw_data/exp_01_05_09/ann_data910000/'
-raw_data_dir = '/home/dihe/Projects/data/raw_data/'
-processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-docdev_512'
+# checkpoint_path ='/home/dihe/Projects/data/raw_data/exp_01_05_09/ann_data910000/'
+# raw_data_dir = '/home/dihe/Projects/data/raw_data/'
+# processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-docdev_512'
 
-processed_data_dir2 = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-trainqueryeval2_512'
-checkpoint_path2 ='/home/dihe/Projects/data/raw_data/eval_exp_01_05_09_910000/ann_data_sample20q/'
-query_emb_num=4
+# processed_data_dir2 = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-trainqueryeval2_512'
+# checkpoint_path2 ='/home/dihe/Projects/data/raw_data/eval_exp_01_05_09_910000/ann_data_sample20q/'
+# query_emb_num=4
+
+
+# checkpoint_path ='/home/dihe/Projects/data/raw_data/exp_21_05_21_01_check/ann_data10000/'
+# raw_data_dir = '/home/dihe/Projects/data/raw_data/'
+# processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-docdev_512'
+
+# processed_data_dir2 = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-trainqueryeval_512'
+# checkpoint_path2 ='/home/dihe/Projects/data/raw_data/exp_21_05_21_01_check_10000/ann_data_sampleq/'
+# query_emb_num=4
+
+# checkpoint_path ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_21_05_21_01/check/ann_data10000/'
+# raw_data_dir = '/home/dihe/Projects/data/raw_data/'
+# processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-docdev_512'
+
+# processed_data_dir2 = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-trainqueryeval2_512'
+# checkpoint_path2 ='/home/dihe/Projects/data/raw_data/exp_21_05_21_01_check_10000/ann_data_sample20q/'
+# query_emb_num=4
+
+# checkpoint_path ='/home/dihe/Projects/data/raw_data/exp_01_05_09/ann_data900000/'
+# raw_data_dir = '/home/dihe/Projects/data/raw_data/'
+# processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-docdev_512'
+
+# processed_data_dir2 = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-trainqueryeval2_512'
+# checkpoint_path2 ='/home/dihe/Projects/data/raw_data/eval_exp_01_05_09_900000/ann_data_sample20q/'
+# query_emb_num=4
+
+# checkpoint_path ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_21_04_14_01/check/ann_data1000000/'
+# raw_data_dir = '/home/dihe/Projects/data/raw_data/'
+# processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-docdev_512'
+
+# processed_data_dir2 = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-trainqueryeval2_512'
+# checkpoint_path2 ='/home/dihe/Projects/data/raw_data/eval_exp_21_04_14_01_1000000/ann_data_sample20q/'
+# query_emb_num=4
 
 #dev mrr
-# checkpoint_path ='/home/dihe/Projects/data/raw_data/exp_01_05_09/ann_data900000/'
+# checkpoint_path ='/home/dihe/Projects/data/raw_data/exp_01_05_09/ann_data910000/'
+# checkpoint_path ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_21_05_21_01/check/ann_data280000/'
 # raw_data_dir = '/home/dihe/Projects/data/raw_data/'
 # processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-docdev_512'
 
 # processed_data_dir2 = processed_data_dir
 # checkpoint_path2 =checkpoint_path
 # query_emb_num=8
+
+# checkpoint_path ='/home/dihe/Projects/data/raw_data/exp_01_05_09/ann_data1000000/'
+# raw_data_dir = '/home/dihe/Projects/data/raw_data/'
+# processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-docdev_512'
+
+# processed_data_dir2 = processed_data_dir
+# checkpoint_path2 =checkpoint_path
+# query_emb_num=8
+
+# checkpoint_path ='/home/dihe/Projects/data/raw_data/exp_21_05_21_01_check/ann_data10000/'
+# raw_data_dir = '/home/dihe/Projects/data/raw_data/'
+# processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-docdev_512'
+
+# processed_data_dir2 = processed_data_dir
+# checkpoint_path2 =checkpoint_path
+# query_emb_num=8
+
+# checkpoint_path ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_21_05_21_01/check/ann_data300000/'
+# raw_data_dir = '/home/dihe/Projects/data/raw_data/'
+# processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-docdev_512'
+
+# processed_data_dir2 = processed_data_dir
+# checkpoint_path2 =checkpoint_path
+# query_emb_num=8
+
+checkpoint_path ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_21_04_14_01/check/ann_data1000000/'
+raw_data_dir = '/home/dihe/Projects/data/raw_data/'
+processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-docdev_512'
+
+processed_data_dir2 = processed_data_dir
+checkpoint_path2 =checkpoint_path
+query_emb_num=8
 
 
 #sample20
@@ -129,6 +195,49 @@ query_emb_num=4
 # processed_data_dir_origin='/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-doc_512/'
 # processed_data_dir_query_origin='/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-doc_512/'
 # ann_path='/home/dihe/Projects/data/raw_data/exp_01_05_09/ann_training_data_0'
+
+
+# checkpoint_path ='/home/dihe/Projects/data/raw_data/exp_21_05_21_01_check/ann_data100000/'
+# raw_data_dir = '/home/dihe/Projects/data/raw_data/'
+# processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-docdev_512'
+# processed_data_dir2 = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-trainqueryeval2_512'
+# checkpoint_path2 ='/home/dihe/Projects/data/raw_data/exp_21_05_21_01_check_100000/ann_data_sample20q/'
+# query_emb_num=4
+# processed_data_dir_origin='/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-doc_512/'
+# processed_data_dir_query_origin='/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-doc_512/'
+# ann_path='/home/dihe/Projects/data/raw_data/exp_21_05_21_01_check/ann_training_data_0'
+
+
+# ann_path='/home/dihe/Projects/data/raw_data/exp_21_05_21_01_check/ann_training_data_0'
+# checkpoint_path ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_21_05_21_01/check/ann_data10000/'
+# checkpoint_path2 ='/home/dihe/Projects/data/raw_data/exp_21_05_21_01_check_10000/ann_data_sample20q/'
+# # checkpoint_path ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_01_05_09/ann_data900000/'
+# # checkpoint_path2 ='/home/dihe/Projects/data/raw_data/eval_exp_01_05_09_900000/ann_data_sample20q/'
+
+# raw_data_dir = '/home/dihe/Projects/data/raw_data/'
+# processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-docdev_512'
+# processed_data_dir2 = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-trainqueryeval2_512'
+# query_emb_num=4
+# processed_data_dir_origin='/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-doc_512/'
+# processed_data_dir_query_origin='/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-doc_512/'
+
+
+# ann_path='/home/dihe/Projects/data/raw_data/exp_01_05_09/ann_training_data_0'
+# # checkpoint_path ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_21_04_14_01/check/ann_data1000000/'
+# # checkpoint_path2 ='/home/dihe/Projects/data/raw_data/eval_exp_21_04_14_01_1000000/ann_data_sample20q/'
+# checkpoint_path ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_01_05_09/ann_data900000/'
+# checkpoint_path2 ='/home/dihe/Projects/data/raw_data/eval_exp_01_05_09_900000/ann_data_sample20q/'
+# raw_data_dir = '/home/dihe/Projects/data/raw_data/'
+# processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-docdev_512'
+# processed_data_dir2 = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-trainqueryeval2_512'
+
+# query_emb_num=4
+# processed_data_dir_origin='/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-doc_512/'
+# processed_data_dir_query_origin='/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-doc_512/'
+
+
+
+
 
 #sample200
 # checkpoint_path ='/home/dihe/Projects/data/raw_data/exp_01_05_09/ann_data910000/'
@@ -158,108 +267,32 @@ query_emb_num=4
 # checkpoint_path_query_origin='/home/dihe/Projects/data/raw_data/eval_exp_01_05_09_900000/ann_data_sample20q/'
 
 
-
-# processed_data_dir2 = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-doceval_dev_512'
-# checkpoint_path2 ='/home/dihe/Projects/data/raw_data/eval_exp_01_05_09_820000_dev/ann_data/'
-# query_emb_num=4
-
-
-# checkpoint =  0 
-# data_type = 1 
-# test_set = 0 
-# checkpoint_path ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_12_21_05/ann_data2/'
-# raw_data_dir = '/home/dihe/Projects/data/raw_data/'
-# processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast_512'
-
-
-# checkpoint =  0 
-# data_type = 1 
-# test_set = 0 
-# checkpoint_path ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_02_03_02/ann_data/'
-# raw_data_dir = '/home/dihe/Projects/data/raw_data/'
-# processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-passsmall5_512'
-# raw_data_dir = '/home/dihe/Projects/data/raw_data/'
-# processed_data_dir2 = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-passsmall5_512'
-# checkpoint_path2 ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_02_03_02/ann_data/'
-
-# checkpoint =  0 
-# data_type = 0
-# test_set = 0 
-# checkpoint_path ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_12_23_02/ann_data400000/'
+# checkpoint_path ='/home/dihe/Projects/data/raw_data/exp_21_05_21_01_check/ann_data100000/'
 # raw_data_dir = '/home/dihe/Projects/data/raw_data/'
 # processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-docdev_512'
-# processed_data_dir2 = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-doceval_dev_512'
-# checkpoint_path2 ='/home/dihe/Projects/data/raw_data/eval_exp_12_23_02_400000_dev/ann_data/'
 
-#820
+# processed_data_dir2 = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-trainqueryeval2_512'
+# checkpoint_path2 ='/home/dihe/Projects/data/raw_data/exp_21_05_21_01_check_100000/ann_data_sample20q/'
+# query_emb_num=4
 
-# checkpoint =  0 
-# data_type = 1 
-# test_set = 0 
-# checkpoint_path ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_12_23_08/ann_data2/'
+# processed_data_dir_query_origin=processed_data_dir2
+# checkpoint_path_origin='/home/dihe/Projects/data/raw_data/exp_01_05_09/ann_data900000/'
+# checkpoint_path_query_origin='/home/dihe/Projects/data/raw_data/eval_exp_01_05_09_900000/ann_data_sample20q/'
+
+
+
+# checkpoint_path ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_21_04_14_01/check/ann_data1000000/'
 # raw_data_dir = '/home/dihe/Projects/data/raw_data/'
-# processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast_512'
+# processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-docdev_512'
 
-# checkpoint =  0 
-# data_type = 1 
-# test_set = 0 
-# checkpoint_path ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_12_20_03/ann_data2/'
-# raw_data_dir = '/home/dihe/Projects/data/raw_data/'
-# processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast_512'
+# processed_data_dir2 = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-trainqueryeval2_512'
+# checkpoint_path2 ='/home/dihe/Projects/data/raw_data/eval_exp_21_04_14_01_1000000/ann_data_sample20q/'
+# query_emb_num=4
 
+# processed_data_dir_query_origin=processed_data_dir2
+# checkpoint_path_origin='/home/dihe/Projects/data/raw_data/exp_01_05_09/ann_data900000/'
+# checkpoint_path_query_origin='/home/dihe/Projects/data/raw_data/eval_exp_01_05_09_900000/ann_data_sample20q/'
 
-
-# checkpoint =  0 
-# data_type = 1 
-# test_set = 0 
-# checkpoint_path ='/home/dihe/cudnn_file/recommender_shuqi/exp_12_02_14_01/save/ann_data/'
-# raw_data_dir = '/home/dihe/Projects/data/raw_data/'
-# processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast_512'
-
-
-# checkpoint =  0 
-# data_type = 1 
-# test_set = 0 
-# checkpoint_path ='/home/dihe/cudnn_file/recommender_shuqi/exp_01_07_09/save/ann_data/'
-# raw_data_dir = '/home/dihe/Projects/data/raw_data/'
-# processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast_512'
-
-# checkpoint =  0 
-# data_type = 1 
-# test_set = 0 
-# checkpoint_path ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_12_23_08/ann_data/'
-# raw_data_dir = '/home/dihe/Projects/data/raw_data/'
-# processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast_512'
-
-# checkpoint =  0 
-# data_type = 1 
-# test_set = 1 
-# checkpoint_path ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_11_11_01/ann_data3/'
-# raw_data_dir = '/home/dihe/Projects/data/raw_data/'
-# processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast-passtest_512'
-#--------------------------------------------------------------------------------------------
-
-# checkpoint =  180000 
-# data_type = 1 
-# test_set = 1 
-# checkpoint_path ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_12_02_02/ann_data/'
-# raw_data_dir = '/home/dihe/Projects/data/raw_data/'
-# processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast_512'
-
-
-# checkpoint =  210000 
-# data_type = 1 
-# test_set = 1 
-# checkpoint_path ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_12_02_01/ann_data/'
-# raw_data_dir = '/home/dihe/Projects/data/raw_data/'
-# processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast_512'
-
-# checkpoint =  0 
-# data_type = 1 
-# test_set = 0
-# checkpoint_path ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_12_11_03/ann_data2/'
-# raw_data_dir = '/home/dihe/Projects/data/raw_data/'
-# processed_data_dir = '/home/dihe/Projects/data/raw_data/ann_data_roberta-base-fast_512'
 
 
 
@@ -321,8 +354,8 @@ def get_reverse_dict(mydict):
 
 count_none=0
 dev_query_positive_id = {}
-query_positive_id_path = os.path.join(raw_data_dir, "msmarco-doctrain-qrels.tsv")
-#query_positive_id_path = os.path.join(raw_data_dir, "msmarco-docdev-qrels.tsv")
+#query_positive_id_path = os.path.join(raw_data_dir, "msmarco-doctrain-qrels.tsv")
+query_positive_id_path = os.path.join(raw_data_dir, "msmarco-docdev-qrels.tsv")
 
 with open(query_positive_id_path, 'r', encoding='utf8') as f:
     tsvreader = csv.reader(f, delimiter=" ")
@@ -432,7 +465,7 @@ def get_sample20():
             pos_pid = pidmap_origin_re[int(line_arr[1])]
             neg_pids = line_arr[2].split(',')
             neg_pids = [pidmap_origin_re[int(neg_pid)] for neg_pid in neg_pids]
-            train_q_sample20[qid]=neg_pids+[pos_pid]
+            train_q_sample20[qid]=neg_pids[:20]+[pos_pid]
         else:
             assert 1==0
 
@@ -509,6 +542,9 @@ def get_sample200():
             for idx in selected_ann_idx:
                 pred_pid = pidmap_re[passage_embedding2id[idx]]
                 train_q_sample200[query_id].append(pred_pid)
+
+            train_q_sample200[query_id]=train_q_sample200[query_id][:20]
+
             if pos_id not in  train_q_sample200[query_id]:
                 train_q_sample200[query_id]+=[pos_id] 
         # if i<5:
@@ -590,6 +626,7 @@ def EvalDevQuery(query_embedding2id, passage_embedding2id, qidmap_re,pidmap_re, 
 
         top_ann_pid = I_nearest_neighbor[query_idx].copy()
         selected_ann_idx = top_ann_pid[:topN]
+        #print('???',topN)
 
         #if train_q_sample20 !=None:
 
@@ -620,7 +657,7 @@ def EvalDevQuery(query_embedding2id, passage_embedding2id, qidmap_re,pidmap_re, 
                 if pred_pid in dev_query_positive_id[query_id]:
                     mrr += 1/(rank + 1)
                     flag=1
-                    print('rank: ',rank)
+                    #print('rank: ',rank)
                     
 
 
@@ -726,7 +763,8 @@ dev_query_embedding2id = np.concatenate(dev_query_embedding2id, axis=0)
 
 ##reranking
 # sample20 =get_sample20()
-# sample20 =get_sample200()
+
+# #sample20 =get_sample200()
 # pidmap_t = collections.defaultdict(list)
 # for i in range(len(passage_embedding2id)):
 #     pidmap_t[pidmap_re[passage_embedding2id[i]]].append(i)  # abs pos(key) to rele pos(val)
@@ -736,8 +774,10 @@ dev_query_embedding2id = np.concatenate(dev_query_embedding2id, axis=0)
 #     p_set = []
 #     p_set_map = {}
 #     if qid_r not in sample20:
-#         pass
+#         print('no')
+        
 #     else:
+#         #print('yes')
 #         count = 0
 #         for k,pid in enumerate(sample20[qid_r]):
 #             if pid in pidmap_t:
@@ -747,6 +787,7 @@ dev_query_embedding2id = np.concatenate(dev_query_embedding2id, axis=0)
 #                     count += 1
 #             else:
 #                 print(pid,"not in passages")
+#     #print('???len(p_set)',len(p_set))
 #     if len(p_set)==0:
 #         all_dev_I.append([-1]*10)
 #     else:
@@ -798,7 +839,7 @@ cpu_index = faiss.IndexFlatIP(dim)
 cpu_index.add(passage_embedding)    
 _, dev_I = cpu_index.search(dev_query_embedding, topN)
 #print('???',dev_I[:10])
-result = EvalDevQuery(dev_query_embedding2id, passage_embedding2id, qidmap_re,pidmap_re , dev_query_positive_id,dev_I, 10)
+result = EvalDevQuery(dev_query_embedding2id, passage_embedding2id, qidmap_re,pidmap_re , dev_query_positive_id,dev_I, 100)
 
 final_ndcg, eval_query_cnt, final_Map, final_mrr, final_recall, hole_rate, ms_mrr, Ahole_rate, metrics, prediction = result
 print("Results for checkpoint "+str(checkpoint))
