@@ -72,8 +72,12 @@ checkpoint_path ='/home/dihe/Projects/data/raw_data/exp_01_05_09/ann_data'+str(n
 checkpoint_path_query='/home/dihe/Projects/data/raw_data/eval_exp_01_05_09_'+str(num)+'/ann_data_sample20q/'
 # checkpoint_path2 ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_21_05_21_01/check/ann_data210000/'
 # checkpoint_path_query2='/home/dihe/Projects/data/raw_data/exp_21_05_21_01_check_210000/ann_data_sample20q/'
-checkpoint_path2 ='/home/dihe/Projects/data/raw_data/exp_01_05_09/ann_data910000/'
-checkpoint_path_query2='/home/dihe/Projects/data/raw_data/eval_exp_01_05_09_910000//ann_data_sample20q/'
+# checkpoint_path2 ='/home/dihe/Projects/data/raw_data/exp_01_05_09/ann_data910000/'
+# checkpoint_path_query2='/home/dihe/Projects/data/raw_data/eval_exp_01_05_09_910000//ann_data_sample20q/'
+
+checkpoint_path2 ='/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_21_04_14_01/check3/ann_data30000/'
+checkpoint_path_query2='/home/dihe/Projects/data/raw_data/exp_21_04_14_01_check3_30000/ann_data_sample20q/'
+
 # checkpoint_path_query2='/home/dihe/Projects/data/raw_data/eval_exp_21_04_14_01_1000000/ann_data_sample20q/'
 
 
