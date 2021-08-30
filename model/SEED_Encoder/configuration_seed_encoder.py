@@ -1,5 +1,5 @@
-from ...configuration_utils import PretrainedConfig
-from ...utils import logging
+from transformers.configuration_utils import PretrainedConfig
+from transformers.utils import logging
 
 
 logger = logging.get_logger(__name__)
@@ -86,14 +86,14 @@ class SEEDEncoderConfig(PretrainedConfig):
         quant_noise_pq_block_size=8,
 
 
-        train_ratio=train_ratio,
-        decoder_atten_window=decoder_atten_window,
+        train_ratio='0.5:0.5',
+        decoder_atten_window=2,
         pooler_activation_fn='tanh',
         pooler_dropout=0.0,
 
 
         encoder_layers_to_keep=None,
-        decoder_layers=12,
+        decoder_layers=3,
         decoder_embed_path=None,
         decoder_embed_dim=768,
         decoder_ffn_embed_dim=3072,

@@ -40,8 +40,11 @@ preprocessed_data_dir="${base_data_dir}ann_data_${tokenizer_type}_${seq_length}/
 # pretrained_checkpoint_dir=/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_21_04_14_01/check/checkpoint-1000000/model.pt
 # job_name=eval_exp_21_04_14_01_1000000
 
-pretrained_checkpoint_dir=/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_21_04_14_01/check3/checkpoint-30000/model.pt
-job_name=exp_21_04_14_01_check3_30000
+# pretrained_checkpoint_dir=/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_21_04_14_01/check3/checkpoint-30000/model.pt
+# job_name=exp_21_04_14_01_check3_30000
+
+pretrained_checkpoint_dir=/home/dihe/cudnn_file/recommender_shuqi/MIND_data/raw_data/exp_21_05_28_01/check3/checkpoint-40000/model.pt
+job_name=exp_21_05_28_01_check3_40000
 
 
 # job_name=eval_exp_01_05_09_100000
@@ -111,7 +114,7 @@ model_ann_data_dir="${model_dir}ann_data_sample20q/"
 
 
 initial_data_gen_cmd="\
-python -m torch.distributed.launch --nproc_per_node=4 ../drivers/run_ann_data_gen_eval.py --training_dir $model_dir \
+python -m torch.distributed.launch --nproc_per_node=4 --master_addr 127.0.0.2 --master_port 35000 ../drivers/run_ann_data_gen_eval.py --training_dir $model_dir \
 --init_model_dir $pretrained_checkpoint_dir --train_model_type $model_type --output_dir $model_ann_data_dir \
 --cache_dir "${model_ann_data_dir}cache/" --data_dir $preprocessed_data_dir --max_seq_length $seq_length \
 --per_gpu_eval_batch_size 64 --topk_training 200 --negative_sample 20 --end_output_num 0 --inference --bpe_vocab_file ../../data/bert-16g-0930/vocab.txt\

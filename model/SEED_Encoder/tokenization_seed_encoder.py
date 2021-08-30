@@ -21,24 +21,28 @@ from typing import Any, Dict, List, Optional, Tuple
 import sentencepiece as sp
 import six
 
-from ...tokenization_utils import PreTrainedTokenizer
+from transformers.tokenization_utils import PreTrainedTokenizer
 
 
-# PRETRAINED_VOCAB_FILES_MAP = {
-#     "vocab_file": {
-#         "microsoft/seed-encoder": "",
-#     }
-# }
+PRETRAINED_VOCAB_FILES_MAP = {
+    "vocab_file": {
+        "microsoft/seed-encoder-3-layer-decoder": "",
+        "microsoft/seed-encoder-1-layer-decoder": ""
+    }
+}
 
-# PRETRAINED_POSITIONAL_EMBEDDINGS_SIZES = {
-#     "microsoft/seed-encoder": 512,
-# }
+PRETRAINED_POSITIONAL_EMBEDDINGS_SIZES = {
+    "microsoft/seed-encoder-3-layer-decoder": 512,
+    "microsoft/seed-encoder-1-layer-decoder": 512,
+}
 
-# PRETRAINED_INIT_CONFIGURATION = {
-#     "microsoft/seed-encoder": {"do_lower_case": False},
-# }
+PRETRAINED_INIT_CONFIGURATION = {
+    "microsoft/seed-encoder-3-layer-decoder": {"do_lower_case": False},
+    "microsoft/seed-encoder-1-layer-decoder": {"do_lower_case": False},
+}
 
-VOCAB_FILES_NAMES = {"vocab_file": "spm.model"}
+VOCAB_FILES_NAMES = {"vocab_file": "vocab.txt"}
+
 
 
 class SEEDTokenizer(PreTrainedTokenizer):
@@ -86,9 +90,9 @@ class SEEDTokenizer(PreTrainedTokenizer):
     """
 
     vocab_files_names = VOCAB_FILES_NAMES
-    # pretrained_vocab_files_map = PRETRAINED_VOCAB_FILES_MAP
-    # pretrained_init_configuration = PRETRAINED_INIT_CONFIGURATION
-    # max_model_input_sizes = PRETRAINED_POSITIONAL_EMBEDDINGS_SIZES
+    pretrained_vocab_files_map = PRETRAINED_VOCAB_FILES_MAP
+    pretrained_init_configuration = PRETRAINED_INIT_CONFIGURATION
+    max_model_input_sizes = PRETRAINED_POSITIONAL_EMBEDDINGS_SIZES
 
     def __init__(
         self,
@@ -349,8 +353,11 @@ class FastBERTTokenizer:
             filename = filename_prefix + "-" + filename
         full_path = os.path.join(path, filename)
         with open(full_path, "wb") as fs:
-            fs.write(self.spm.serialized_model_proto())
+            #fs.write(self.spm.serialized_model_proto())
+            for item in self.ids_to_tokens:
+                fs.write(str(item)+'\n')
         return (full_path,)
+        #pass
 
 
     def _run_strip_accents(self, text):
