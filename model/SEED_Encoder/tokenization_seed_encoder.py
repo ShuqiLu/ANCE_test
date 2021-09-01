@@ -26,8 +26,8 @@ from transformers.tokenization_utils import PreTrainedTokenizer
 
 PRETRAINED_VOCAB_FILES_MAP = {
     "vocab_file": {
-        "microsoft/seed-encoder-3-layer-decoder": "",
-        "microsoft/seed-encoder-1-layer-decoder": ""
+        "microsoft/seed-encoder-3-layer-decoder": "./vocab.txt",
+        "microsoft/seed-encoder-1-layer-decoder": "./vocab.txt"
     }
 }
 

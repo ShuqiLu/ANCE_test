@@ -1,0 +1,56 @@
+{
+  "architectures": [
+    "SEEDEncoderForMaskedLM"
+  ],
+  "pad_token_id" : 1,
+  "vocab_size" : 32769,
+  "encoder_layers" : 12,
+  "encoder_embed_dim" : 768,
+  "encoder_ffn_embed_dim" : 3072,
+  "encoder_attention_heads" : 12,
+
+  "dropout" : 0.1,
+  "attention_dropout" : 0.1,
+  "activation_dropout" : 0.0,
+  "encoder_layerdrop" : 0.0,
+  "max_positions" : 512,
+  "activation_fn" : "gelu",
+  "quant_noise_pq" : 0.0,
+  "quant_noise_pq_block_size" : 8,
+
+
+  "train_ratio" : "0.5:0.5",
+  "decoder_atten_window" : 2,
+  "pooler_activation_fn" : "tanh",
+  "pooler_dropout" : 0.0,
+
+
+  
+  "decoder_layers" : 3,
+
+  "decoder_embed_dim" : 768,
+  "decoder_ffn_embed_dim" : 3072,
+  "decoder_attention_heads" : 12,
+
+  "attention_dropout" : 0.1,
+  "activation_dropout" : 0.0,
+
+  "adaptive_softmax_dropout" : 0,
+
+  
+  // "encoder_layers_to_keep" : None,
+  // "decoder_embed_path" : None,
+  // "decoder_normalize_before" : True,
+  // "decoder_learned_pos" : True,
+  // "adaptive_softmax_cutoff" : None,
+  // "share_decoder_input_output_embed" : True,
+  // "share_all_embeddings" : True,
+  // "no_token_positional_embeddings" : False,
+  // "adaptive_input" : False,
+  // "no_cross_attention" : False,
+  // "cross_self_attention" : False,
+  // "no_scale_embedding" : True,
+  // "layernorm_embedding" : True,
+  // "tie_adaptive_weights" : True,
+  // "decoder_layers_to_keep" : None
+}

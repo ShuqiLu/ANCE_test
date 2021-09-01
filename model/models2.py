@@ -32,7 +32,7 @@ from fairseq.modules import (
 from transformers import ElectraTokenizer, ElectraModel
 from transformers import AutoTokenizer, AutoModel
 
-from models.SEED_Encoder import SEEDEncoderConfig, SEEDTokenizer, SEEDEncoderForSequenceClassification
+from model.SEED_Encoder import SEEDEncoderConfig, SEEDTokenizer, SEEDEncoderForSequenceClassification
 
 
 class EmbeddingMixin:

@@ -13,7 +13,7 @@ from transformers import (
 )
 import transformers
 from utils.eval_mrr import passage_dist_eval,passage_dist_eval_last
-from model.models import MSMarcoConfigDict
+from model.models2 import MSMarcoConfigDict
 from utils.lamb import Lamb
 import os
 from os import listdir
@@ -36,6 +36,11 @@ try:
     from torch.utils.tensorboard import SummaryWriter
 except ImportError:
     from tensorboardX import SummaryWriter
+
+
+
+
+
 
 
 logger = logging.getLogger(__name__)

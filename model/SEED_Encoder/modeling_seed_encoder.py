@@ -177,7 +177,7 @@ class SEEDEncoderForMaskedLM(SEEDEncoderPretrainedModel):
 
         
 
-class SEEDEncoderForSequenceClassification(object):
+class SEEDEncoderForSequenceClassification(SEEDEncoderPretrainedModel):
     """docstring for ClassName"""
     def __init__(self, config):
         super().__init__(config)
