@@ -75,7 +75,6 @@ class SEEDEncoderConfig(PretrainedConfig):
         encoder_embed_dim=768,
         encoder_ffn_embed_dim=3072,
         encoder_attention_heads=12,
-
         dropout=0.1,
         attention_dropout=0.1,
         activation_dropout=0.0,
@@ -84,14 +83,10 @@ class SEEDEncoderConfig(PretrainedConfig):
         activation_fn='gelu',
         quant_noise_pq=0.0,
         quant_noise_pq_block_size=8,
-
-
         train_ratio='0.5:0.5',
         decoder_atten_window=2,
         pooler_activation_fn='tanh',
         pooler_dropout=0.0,
-
-
         encoder_layers_to_keep=None,
         decoder_layers=3,
         decoder_embed_path=None,
@@ -100,8 +95,6 @@ class SEEDEncoderConfig(PretrainedConfig):
         decoder_attention_heads=12,
         decoder_normalize_before=True,
         decoder_learned_pos=True,
-        attention_dropout=0.1,
-        activation_dropout=0.0,
         adaptive_softmax_cutoff=None,
         adaptive_softmax_dropout=0,
         share_decoder_input_output_embed=True,
@@ -118,7 +111,7 @@ class SEEDEncoderConfig(PretrainedConfig):
     ):
         super().__init__(**kwargs)
 
-        self.pad_token_id=padding_idx
+        self.pad_token_id=pad_token_id
         self.vocab_size=vocab_size
         self.encoder_layers=encoder_layers
         self.encoder_embed_dim=encoder_embed_dim
@@ -149,8 +142,6 @@ class SEEDEncoderConfig(PretrainedConfig):
         self.decoder_attention_heads=decoder_attention_heads
         self.decoder_normalize_before=decoder_normalize_before
         self.decoder_learned_pos=decoder_learned_pos
-        self.attention_dropout=attention_dropout
-        self.activation_dropout=activation_dropout
         self.adaptive_softmax_cutoff=adaptive_softmax_cutoff
         self.adaptive_softmax_dropout=adaptive_softmax_dropout
         self.share_decoder_input_output_embed=share_decoder_input_output_embed
@@ -168,6 +159,12 @@ class SEEDEncoderConfig(PretrainedConfig):
         self.layernorm_embedding=layernorm_embedding
         self.tie_adaptive_weights=tie_adaptive_weights
         self.decoder_layers_to_keep=decoder_layers_to_keep
+
+
+        self.decoder_layerdrop=0
+
+        self.max_source_positions=max_positions
+        self.max_target_positions=max_positions
 
 
 

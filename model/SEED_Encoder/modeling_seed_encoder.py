@@ -1,4 +1,4 @@
-import logging
+from transformers.utils import logging
 
 import torch
 import torch.nn as nn
@@ -9,19 +9,20 @@ import math
 
 from .modules import (
     LayerNorm,
-    TransformerSentenceEncoder,
+    get_activation_fn,
 )
 
 
-from fairseq.models.transformer import TransformerDecoder
 
 
-from .transformer_sentence_encoder import TransformerSentenceEncoder
 
+from .transformer_sentence_encoder import TransformerSentenceEncoder,TransformerDecoder,EncoderOut
 
 
 import os
 from transformers.modeling_utils import PreTrainedModel
+
+
 logger = logging.get_logger(__name__)
 
 # _CONFIG_FOR_DOC = "SEEDEncoderConfig"
@@ -33,19 +34,7 @@ logger = logging.get_logger(__name__)
 #      "microsoft/seed-encoder-1-layer-decoder",
 # ]
 
-
-
-EncoderOut = NamedTuple(
-    "EncoderOut",
-    [
-        ("encoder_out", Tensor),  # T x B x C
-        ("encoder_padding_mask", Optional[Tensor]),  # B x T
-        ("encoder_embedding", Optional[Tensor]),  # B x T x C
-        ("encoder_states", Optional[List[Tensor]]),  # List[T x B x C]
-        ("src_tokens", Optional[Tensor]),  # B x T
-        ("src_lengths", Optional[Tensor]),  # B x 1
-    ],
-)
+from model.SEED_Encoder import SEEDEncoderConfig
 
 
 
@@ -76,17 +65,18 @@ class SEEDEncoderPretrainedModel(PreTrainedModel):
 
 
 
-class RobertaEncoder:
+class RobertaEncoder(nn.Module):
     """RoBERTa encoder."""
 
     def __init__(self, args):
+        super().__init__()
         self.args = args
 
         if args.encoder_layers_to_keep:
             args.encoder_layers = len(args.encoder_layers_to_keep.split(","))
 
         self.sentence_encoder = TransformerSentenceEncoder(
-            padding_idx=args.pad_idx,
+            padding_idx=args.pad_token_id,
             vocab_size=args.vocab_size,
             num_encoder_layers=args.encoder_layers,
             embedding_dim=args.encoder_embed_dim,
@@ -161,11 +151,11 @@ class SEEDEncoderForMaskedLM(SEEDEncoderPretrainedModel):
     def __init__(self, config):
         super().__init__(config)
         self.seed_encoder = SEEDEncoderModel(config)
-        self.lm_head = RobertaLMHead(config,
+        self.lm_head = RobertaLMHead(
             embed_dim=config.encoder_embed_dim,
             output_dim=config.vocab_size,
             activation_fn=config.activation_fn,
-            weight=self.seed_encoder.encoder.embed_tokens.weight )
+            weight=self.seed_encoder.encoder.sentence_encoder.embed_tokens.weight )
 
         self.init_weights()
 

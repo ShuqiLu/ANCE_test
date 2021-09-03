@@ -32,6 +32,10 @@ from fairseq.modules import (
 from transformers import ElectraTokenizer, ElectraModel
 from transformers import AutoTokenizer, AutoModel
 
+import torch.distributed as dist
+def is_first_worker():
+    return not dist.is_available() or not dist.is_initialized() or dist.get_rank() == 0
+
 
 class EmbeddingMixin:
     """
@@ -566,6 +570,10 @@ class RobertaDot_NLL_LN_fairseq_fast(NLL,nn.Module):
         outputs1, _ = self.encoder(input_ids)#[-1].transpose(0,1)
         #print('???',outputs1)
         outputs1=outputs1[-1].transpose(0,1)
+
+        if is_first_worker():
+            print(outputs1)
+
         full_emb = self.masked_mean_or_first(outputs1, attention_mask)
         query1 = self.norm(self.embeddingHead(full_emb))
 

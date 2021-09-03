@@ -20,13 +20,13 @@
 
 
   "train_ratio" : "0.5:0.5",
-  "decoder_atten_window" : 2,
+  "decoder_atten_window" : 8,
   "pooler_activation_fn" : "tanh",
   "pooler_dropout" : 0.0,
 
 
   
-  "decoder_layers" : 3,
+  "decoder_layers" : 1,
 
   "decoder_embed_dim" : 768,
   "decoder_ffn_embed_dim" : 3072,
@@ -35,22 +35,5 @@
   "attention_dropout" : 0.1,
   "activation_dropout" : 0.0,
 
-  "adaptive_softmax_dropout" : 0,
-
-  
-  // "encoder_layers_to_keep" : None,
-  // "decoder_embed_path" : None,
-  // "decoder_normalize_before" : True,
-  // "decoder_learned_pos" : True,
-  // "adaptive_softmax_cutoff" : None,
-  // "share_decoder_input_output_embed" : True,
-  // "share_all_embeddings" : True,
-  // "no_token_positional_embeddings" : False,
-  // "adaptive_input" : False,
-  // "no_cross_attention" : False,
-  // "cross_self_attention" : False,
-  // "no_scale_embedding" : True,
-  // "layernorm_embedding" : True,
-  // "tie_adaptive_weights" : True,
-  // "decoder_layers_to_keep" : None
+  "adaptive_softmax_dropout" : 0
 }

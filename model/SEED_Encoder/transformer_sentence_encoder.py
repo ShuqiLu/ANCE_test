@@ -3,7 +3,7 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 
-from typing import Callable, Optional, Dict, Tuple, Any, NamedTuple
+from typing import Callable, Optional, Dict, Tuple, Any, NamedTuple, List
 
 import torch
 import torch.nn as nn
@@ -22,10 +22,12 @@ from .modules import (
     log_softmax,
 
 )
+from torch import Tensor
 
-from .quant_noise import quant_noise as apply_quant_noise_
+from .modules import quant_noise as apply_quant_noise_
+from transformers.utils import logging
 
-logger = logging.getLogger(__name__)
+logger = logging.get_logger(__name__)
 
 EncoderOut = NamedTuple(
     "EncoderOut",
@@ -241,6 +243,7 @@ class TransformerDecoder(FairseqIncrementalDecoder):
 
     def __init__(self, args, embed_tokens, no_encoder_attn=False):
         self.args = args
+        super().__init__()
         
         self.register_buffer("version", torch.Tensor([3]))
         self._future_mask = torch.empty(0)

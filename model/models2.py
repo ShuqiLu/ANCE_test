@@ -32,7 +32,12 @@ from fairseq.modules import (
 from transformers import ElectraTokenizer, ElectraModel
 from transformers import AutoTokenizer, AutoModel
 
-from model.SEED_Encoder import SEEDEncoderConfig, SEEDTokenizer, SEEDEncoderForSequenceClassification
+from model.SEED_Encoder import SEEDEncoderConfig, SEEDTokenizer, SEEDEncoderForSequenceClassification,SEEDEncoderForMaskedLM
+
+import torch.distributed as dist
+def is_first_worker():
+    return not dist.is_available() or not dist.is_initialized() or dist.get_rank() == 0
+
 
 
 class EmbeddingMixin:
@@ -206,6 +211,10 @@ class RobertaDot_NLL_LN_fairseq_fast(NLL,nn.Module):
         outputs1, _ = self.encoder(input_ids)#[-1].transpose(0,1)
         #print('???',outputs1)
         outputs1=outputs1[-1].transpose(0,1)
+        
+        
+
+
         full_emb = self.masked_mean_or_first(outputs1, attention_mask)
         query1 = self.norm(self.embeddingHead(full_emb))
 
@@ -255,25 +264,28 @@ class RobertaDot_NLL_LN_fairseq_fast(NLL,nn.Module):
         #pass
 
 
-class RobertaDot_NLL_LN(NLL, SEEDEncoderForSequenceClassification):
+class SEEDEncoderDot_NLL_LN(NLL, SEEDEncoderForMaskedLM):
     """None
     Compress embedding to 200d, then computes NLL loss.
     """
     def __init__(self, config, model_argobj=None):
         NLL.__init__(self, model_argobj)
-        SEEDEncoderForSequenceClassification.__init__(self, config)
+        SEEDEncoderForMaskedLM.__init__(self, config)
         self.embeddingHead = nn.Linear(config.encoder_embed_dim, 768)
         self.norm = nn.LayerNorm(768)
         self.apply(self._init_weights)
 
-    def query_emb(self, input_ids, attention_mask):
-        outputs1 = self.roberta(input_ids=input_ids,
-                                attention_mask=attention_mask)
+    def query_emb(self, input_ids, attention_mask=None):
+        outputs1 = self.seed_encoder.encoder(input_ids)
+
+        if is_first_worker():
+            print(outputs1)
+
         full_emb = self.masked_mean_or_first(outputs1, attention_mask)
         query1 = self.norm(self.embeddingHead(full_emb))
         return query1
 
-    def body_emb(self, input_ids, attention_mask):
+    def body_emb(self, input_ids, attention_mask=None):
         return self.query_emb(input_ids, attention_mask)
 
 
@@ -315,8 +327,8 @@ configs = [
                 use_mean=False,
                 #config_class=,
                 ),
-    MSMarcoConfig(name="rdot_nll_seed_encoder",
-                model=RobertaDot_NLL_LN,
+    MSMarcoConfig(name="seeddot_nll",
+                model=SEEDEncoderDot_NLL_LN,
                 use_mean=False,
                 tokenizer_class=SEEDTokenizer,
                 config_class=SEEDEncoderConfig,

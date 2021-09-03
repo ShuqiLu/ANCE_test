@@ -22,7 +22,8 @@ import sentencepiece as sp
 import six
 
 from transformers.tokenization_utils import PreTrainedTokenizer
-
+from tokenizers import BertWordPieceTokenizer, normalizers, pre_tokenizers
+import re
 
 PRETRAINED_VOCAB_FILES_MAP = {
     "vocab_file": {
@@ -105,7 +106,7 @@ class SEEDTokenizer(PreTrainedTokenizer):
         pad_token="[PAD]",
         cls_token="[CLS]",
         mask_token="<mask>",
-        fb_model_kwargs=self.fb_model_kwargs,
+        fb_model_kwargs:Optional[Dict[str, Any]] = None,
         **kwargs
     ) -> None:
         self.fb_model_kwargs = {} if fb_model_kwargs is None else fb_model_kwargs
@@ -132,6 +133,8 @@ class SEEDTokenizer(PreTrainedTokenizer):
         
         #self._tokenizer = BertWordPieceTokenizer(vocab_file, clean_text=False, strip_accents=False, lowercase=False)
         self._tokenizer = FastBERTTokenizer(vocab_file, fb_model_kwargs=self.fb_model_kwargs)
+
+        #print('???',self.cls_token_id,self.sep_token_id,self.pad_token_id)
 
     @property
     def vocab_size(self):
@@ -282,7 +285,8 @@ class FastBERTTokenizer:
 
         self.vocab={}
         self.ids_to_tokens=[]
-        self.add_from_file(vocab_file)
+        self.add_from_file(open(vocab_file,'r'))
+        self.add_symbol('<mask>')
         self.vocab_size=len(self.vocab)
 
     
@@ -311,10 +315,10 @@ class FastBERTTokenizer:
             return idx
 
     def tokenize(self, text):
-        return self.bert_tokenizer.encode(x, add_special_tokens=False).tokens
+        return self.bert_tokenizer.encode(text, add_special_tokens=False).tokens
         
 
-    def convert_ids_to_tokens(self, ids):
+    def convert_ids_to_tokens(self, index):
         return self.ids_to_tokens[index] if index < self.vocab_size else self.unk
 
     def _convert_token_to_id(self,token):

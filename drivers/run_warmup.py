@@ -213,6 +213,9 @@ def train(args, model, tokenizer, f, train_fn):
             loss = outputs[0]
             acc=outputs[1]
             #print('???',acc)
+            if is_first_worker():
+                print(*batch)
+                assert 1==0
 
             if args.n_gpu > 1:
                 loss = loss.mean()  # mean() to average on multi-gpu parallel training
@@ -346,11 +349,30 @@ def load_stuff(model_type, args):
             finetuning_task=args.task_name,
             cache_dir=args.cache_dir if args.cache_dir else None,
         )
+        print('load config ok...')
         tokenizer = configObj.tokenizer_class.from_pretrained(
             args.tokenizer_name if args.tokenizer_name else args.model_name_or_path,
             do_lower_case=args.do_lower_case,
             cache_dir=args.cache_dir if args.cache_dir else None,
         )
+        print('load tokenizer ok...')
+        print('load model:  ',configObj.model_class)
+        '''
+        model=configObj.model_class(config=config,model_argobj=model_args)
+        if is_first_worker():
+            print('???',model.state_dict().keys())
+            save_model=torch.load(args.model_name_or_path, map_location=lambda storage, loc: storage)
+            save_model=save_model['model']
+            save_new={}
+            for item in save_model:
+                if 'lm_head' not in item:
+                    save_new['seed_encoder.'+item]=save_model[item]
+                else:
+                    save_new[item[8:]]=save_model[item]
+            torch.save(save_new,args.model_name_or_path.strip('.pt')+'_huggingface.pt')
+            print('???',save_new.keys())
+        '''
+
         model = configObj.model_class.from_pretrained(
             args.model_name_or_path,
             from_tf=bool(".ckpt" in args.model_name_or_path),
@@ -358,6 +380,7 @@ def load_stuff(model_type, args):
             cache_dir=args.cache_dir if args.cache_dir else None,
             model_argobj=model_args,
         )
+        #assert 1==0
     elif 'fast' in args.train_model_type:
         config = configObj.config_class.from_pretrained(
             'roberta-base',
